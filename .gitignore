@@ -1,0 +1,28 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Editors
+*~
+*.swp
+*.swo
+.idea/
+.vscode/
+*.code-workspace
+*.sublime-project
+*.sublime-workspace
+
+# Office / export leftovers
+~$*
+*.tmp
+Thumbs.db
+Desktop.ini
+
+# Obsidian / local knowledge-base cache
+.obsidian/
+
+# Build / convert artifacts (keep intentional PDF exports)
+*.log
+.cache/
