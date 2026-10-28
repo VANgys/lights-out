@@ -7,12 +7,33 @@ export class Game {
     }
 
     // Обработка клика
-    handleClick(r, c) {
+    handleClick(r, c) 
+    {
+        if (this.isGameOver) 
+            return;
 
+        // Инверсия клеток
+        this.toggle(r, c);
+        
+        // Увеличение счётчика ходов
+        this.moves++;
+
+        // Проверка победы
+        if (this.checkWin()) 
+        {
+            if (this.level < 15) 
+            {
+                this.level++;
+                this.generateLevel(this.level); // Вызываем генерацию
+            } 
+            else
+                this.isGameOver = true; // Победа на 15 уровне
+        }
     }
 
     // Метод инверсии клетки и её соседей
-    toggle(r, c) {
+    toggle(r, c) 
+    {
         const dirs = [
             [0, 0],   // сама клетка
             [-1, 0],  // вверх
@@ -37,9 +58,9 @@ export class Game {
     checkWin() 
     {
         for (let r = 0; r < 5; r++) 
-            {
+        {
             for (let c = 0; c < 5; c++) 
-                {
+            {
                 if (this.grid[r][c] === 1)
                     return false; // Есть включенная клетка
             }
@@ -54,7 +75,10 @@ export class Game {
     }
 
     // Метод перезапуска игры
-    restart() {
-
+    restart() 
+    {
+        this.level = 1;
+        this.isGameOver = false;
+        this.generateLevel(this.level);
     }
 }
