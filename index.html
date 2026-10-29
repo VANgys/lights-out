@@ -33,7 +33,7 @@
             <!-- [UI-1 / FR-1]: Игровое поле на Canvas
                  id="board" — точка привязки для BoardRenderer и BoardInput -->
             <div class="field-area">
-                <canvas id="board" class="board-canvas" role="img" aria-label="Игровое поле 5 на 5"></canvas>
+                <canvas id="board" width="400" height="400" class="board-canvas" role="img" aria-label="Игровое поле 5 на 5"></canvas>
                 
                 <!-- [UI-5 / FR-1]: Статическое сообщение об ошибке при отключенном JS -->
                 <noscript>
@@ -54,17 +54,8 @@
         </main>
     </div>
 
-    <!-- Порядок подключения скриптов.
-    1. Конфиг
-    2. Классы (Слой Entity: Game, Слой Boundary: HUD, BoardRenderer)
-    3. Точка входа (main.js), которая связывает всё вместе -->
-    <!-- 
-    <script src="js/config.js"></script>
-    <script src="js/Game.js"></script>
-    <script src="js/HUD.js"></script>
-    <script src="js/BoardRenderer.js"></script>
-    <script src="js/BoardInput.js"></script>
-    <script src="js/main.js"></script> 
-    -->
+    <!-- Архитектура ES-модулей: подключаем только main.js, 
+         который через import свяжет все остальные классы -->
+    <script type="module" src="js/main.js"></script>
 </body>
 </html>
