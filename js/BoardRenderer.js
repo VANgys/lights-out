@@ -1,4 +1,4 @@
-// js/BoardRenderer.js
+import { CONFIG } from './config.js';
 
 export class BoardRenderer {
     constructor(canvas) {
@@ -6,22 +6,25 @@ export class BoardRenderer {
         
         // Константы для отрисовки
         // TODO: Подогнать размеры под финальный HTML, если изменятся габариты canvas
-        this.SIZE = 5;
-        this.PADDING = 12;
-        this.GAP = 8;
-        this.CELL = (canvas.width - this.PADDING * 2 - this.GAP * (this.SIZE - 1)) / this.SIZE;
+        this.SIZE = CONFIG.BOARD_SIZE;
+        this.PADDING = CONFIG.GLOW_MARGIN_PX;
+
+        const currentWidth = canvas.width;
+        this.GAP = currentWidth * CONFIG.GAP_RATIO;
+        this.CELL = (currentWidth - this.PADDING * 2 - this.GAP * (this.SIZE - 1)) / this.SIZE;
         
         // Цвета
         // TODO: Сверить цвета с CSS
-        this.COLOR_OFF = '#313858';
-        this.COLOR_ON = '#ffb30b';
-        this.COLOR_OFF_HOVER = '#3a4266';
-        this.COLOR_ON_HOVER = '#ffbe2c';
+        this.COLOR_OFF = CONFIG.COLOR_OFF;
+        this.COLOR_ON = CONFIG.COLOR_ON;
+        this.COLOR_OFF_HOVER = CONFIG.COLOR_OFF_HOVER;
+        this.COLOR_ON_HOVER = CONFIG.COLOR_ON_HOVER;
 
         // Параметры скругления и тени
-        this.BORDER_RADIUS = 10;
-        this.SHADOW_COLOR = 'rgba(255, 179, 11, 0.5)';
-        this.SHADOW_BLUR = 14;
+        this.BORDER_RADIUS = this.CELL * CONFIG.RADIUS_RATIO; // Адаптивный радиус
+        this.SHADOW_COLOR = CONFIG.SHADOW_COLOR;
+        this.SHADOW_BLUR = CONFIG.SHADOW_BLUR;
+        this.PRESS_SCALE = CONFIG.PRESS_SCALE;
         
         // Текущая клетка под курсором (-1, -1, если ни одна не наведена)
         this.hoveredRow = -1;
@@ -81,7 +84,7 @@ export class BoardRenderer {
         // Эффект утопания
         if (isPressed) 
         {
-            size = this.CELL * 0.92; // Уменьшаем на 8%
+            size = this.CELL * this.PRESS_SCALE; // Уменьшаем на 8%
             offset = (this.CELL - size) / 2; // Центрируем
             x += offset;
             y += offset;
