@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <!-- Кодировка и адаптивность для мобильных устройств (NFR-11) -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Lights Out</title>
+    
+    <!-- Подключение внешних стилей -->
+    <link rel="stylesheet" href="css/style.css">
+    
+    <!-- [FR-1 / UI-5]: Если JavaScript отключен, скрываем Canvas, 
+    так как игра не сможет работать без скриптов -->
+    <noscript><style>.board-canvas { display: none; }</style></noscript>
+</head>
+<body>
+    <div class="page">
+        <!-- Основной контейнер игры -->
+        <main class="game" aria-label="Игра Lights Out">
+            
+            <!-- [UI-4]: Заголовок и подзаголовок игры -->
+            <h1>Lights Out</h1>
+            <div class="subtitle">Погасите все клетки</div>
+
+            <!-- [UI-2 / FR-5 / NFR-6]: Счётчик ходов
+                 Число вынесено в <span> с id, чтобы JS обновлял его безопасно 
+                 через textContent, не затрагивая текст "Ходы:" -->
+            <div class="moves">
+                Ходы: <span class="moves-value" id="moves-value">0</span>
+            </div>
+
+            <!-- [UI-1 / FR-1]: Игровое поле на Canvas
+                 id="board" — точка привязки для BoardRenderer и BoardInput -->
+            <div class="field-area">
+                <canvas id="board" width="400" height="400" class="board-canvas" role="img" aria-label="Игровое поле 5 на 5"></canvas>
+                
+                <!-- [UI-5 / FR-1]: Статическое сообщение об ошибке при отключенном JS -->
+                <noscript>
+                    <div class="error-fallback" role="alert">Для игры необходимо включить JavaScript</div>
+                </noscript>
+            </div>
+
+            <!-- [UI-6 / FR-13]: Слот для сообщения о победе. По умолчанию скрыт атрибутом hidden -->
+            <div class="status-slot" aria-live="polite">
+                <span class="win-message" id="win-message" hidden>Вы победили!</span>
+            </div>
+
+            <!-- [UI-3 / FR-11 / FR-12]: Кнопка перезапуска игры -->
+            <button class="restart" id="restart-button" type="button">
+                Перезапустить игру
+            </button>
+            
+        </main>
+    </div>
+
+    <!-- Архитектура ES-модулей: подключаем только main.js, 
+         который через import свяжет все остальные классы -->
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>
