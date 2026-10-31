@@ -1,3 +1,5 @@
+import { CONFIG } from './config.js';
+
 export class Game {
     constructor() {
         this.grid = [];
@@ -21,7 +23,7 @@ export class Game {
         // Проверка победы
         if (this.checkWin()) 
         {
-            if (this.level < 15) 
+            if (this.level < CONFIG.MAX_LEVEL) 
             {
                 this.level++;
                 this.generateLevel(this.level); // Вызываем генерацию
@@ -48,7 +50,7 @@ export class Game {
             const nc = c + dc;
             
             // Проверка на выход за границы поля 5x5
-            if (nr >= 0 && nr < 5 && nc >= 0 && nc < 5)
+            if (nr >= 0 && nr < CONFIG.BOARD_SIZE && nc >= 0 && nc < CONFIG.BOARD_SIZE)
                 // XOR-инверсия: 0 становится 1, 1 становится 0
                 this.grid[nr][nc] = this.grid[nr][nc] === 0 ? 1 : 0;
         }
@@ -57,9 +59,9 @@ export class Game {
     // Метод проверки победы
     checkWin() 
     {
-        for (let r = 0; r < 5; r++) 
+        for (let r = 0; r < CONFIG.BOARD_SIZE; r++) 
         {
-            for (let c = 0; c < 5; c++) 
+            for (let c = 0; c < CONFIG.BOARD_SIZE; c++) 
             {
                 if (this.grid[r][c] === 1)
                     return false; // Есть включенная клетка
@@ -76,8 +78,8 @@ export class Game {
         
         // Создаем пустое поле
         this.grid = [];
-        for (let r = 0; r < 5; r++) 
-            this.grid.push([0, 0, 0, 0, 0]);
+        for (let r = 0; r < CONFIG.BOARD_SIZE; r++) 
+            this.grid.push(new Array(CONFIG.BOARD_SIZE).fill(0));
 
         // Четыре эталонных минимальных решения (по 15 клеток)
         const templates = [
