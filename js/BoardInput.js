@@ -13,6 +13,9 @@ export class BoardInput {
         this.PADDING = CONFIG.GLOW_MARGIN_PX;
         this.GAP = canvas.width * CONFIG.GAP_RATIO;
         this.CELL = (canvas.width - this.PADDING * 2 - this.GAP * (this.SIZE - 1)) / this.SIZE;
+
+        // Вызываем метод для настройки событий
+        this.#setupEvents();
     }
 
     onCanvasClick(event) 
@@ -71,5 +74,22 @@ export class BoardInput {
     onCanvasMouseLeave(event) 
     {
 
+    }
+
+    // Приватный метод для настройки всех слушателей событий
+    #setupEvents() {
+        // Привязываем контекст (this), чтобы методы знали о классе
+        this.onCanvasClick = this.onCanvasClick.bind(this);
+        this.onCanvasMouseMove = this.onCanvasMouseMove.bind(this);
+        this.onCanvasMouseDown = this.onCanvasMouseDown.bind(this);
+        this.onCanvasMouseUp = this.onCanvasMouseUp.bind(this);
+        this.onCanvasMouseLeave = this.onCanvasMouseLeave.bind(this);
+
+        // Подписываемся на события Canvas
+        this.canvas.addEventListener('click', this.onCanvasClick);
+        this.canvas.addEventListener('mousemove', this.onCanvasMouseMove);
+        this.canvas.addEventListener('mousedown', this.onCanvasMouseDown);
+        this.canvas.addEventListener('mouseup', this.onCanvasMouseUp);
+        this.canvas.addEventListener('mouseleave', this.onCanvasMouseLeave);
     }
 }
