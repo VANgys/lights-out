@@ -18,9 +18,28 @@ export class BoardInput {
         this.#setupEvents();
     }
 
+    // Обработка клика
     onCanvasClick(event) 
     {
+        // Если игра завершена (победа на 15 уровне), клики игнорируются
+        if (this.game.isGameOver)
+            return;
 
+        // Определяем, по какой клетке кликнули
+        const cell = this.getCell(event.clientX, event.clientY);
+        
+        // Если клик был по клетке (а не в пустоту между ними)
+        if (cell) 
+        {
+            // Передаем ход в игровую логику
+            this.game.handleClick(cell.r, cell.c);
+            
+            // Сбрасываем состояние нажатия
+            this.renderer.setPressed(-1, -1);
+            
+            // Просим рендерер перерисовать поле с новым состоянием
+            this.renderer.draw(this.game.grid, this.game.isGameOver);
+        }
     }
 
     onCanvasMouseMove(event) 
