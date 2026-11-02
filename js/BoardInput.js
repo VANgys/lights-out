@@ -25,9 +25,34 @@ export class BoardInput {
 
     }
 
+    // Перевод координат курсора (пиксели) в индексы матрицы (строка, столбец)
     getCell(clientX, clientY) 
     {
+        const rect = this.canvas.getBoundingClientRect();
+        
+        // Учитываем масштабирование
+        const scaleX = this.canvas.width / rect.width;
+        const scaleY = this.canvas.height / rect.height;
 
+        // Координаты мыши относительно самого холста
+        const mouseX = (clientX - rect.left) * scaleX;
+        const mouseY = (clientY - rect.top) * scaleY;
+
+        for (let r = 0; r < this.SIZE; r++) 
+        {
+            for (let c = 0; c < this.SIZE; c++) 
+            {
+                // Вычисляем границы текущей клетки
+                const x = this.PADDING + c * (this.CELL + this.GAP);
+                const y = this.PADDING + r * (this.CELL + this.GAP);
+                
+                // Проверяем, попал ли клик в границы этой клетки
+                if (mouseX >= x && mouseX <= x + this.CELL && mouseY >= y && mouseY <= y + this.CELL)
+                    return { r, c };
+            }
+        }
+
+        return null; // Если кликнули мимо клеток
     }
 
     // Обработка нажатия кнопки мыши (для эффекта утопания)
