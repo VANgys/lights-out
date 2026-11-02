@@ -42,9 +42,23 @@ export class BoardInput {
         }
     }
 
+    // Обработка движения мыши
     onCanvasMouseMove(event) 
     {
+        // Если игра завершена, эффект наведения не работает
+        if (this.game.isGameOver) return;
 
+        const cell = this.getCell(event.clientX, event.clientY);
+        
+        if (cell) 
+            // Устанавливаем наведение на конкретную клетку
+            this.renderer.setHover(cell.r, cell.c);
+        else
+            // Если курсор между клетками, сбрасываем наведение
+            this.renderer.setHover(-1, -1); 
+        
+        // Перерисовываем поле, чтобы эффект отобразился
+        this.renderer.draw(this.game.grid, this.game.isGameOver);
     }
 
     // Перевод координат курсора (пиксели) в индексы матрицы (строка, столбец)
@@ -80,19 +94,37 @@ export class BoardInput {
     // Обработка нажатия кнопки мыши (для эффекта утопания)
     onCanvasMouseDown(event) 
     {
+        if (this.game.isGameOver) return;
 
+        const cell = this.getCell(event.clientX, event.clientY);
+        
+        if (cell) 
+        {
+            // Включаем эффект нажатия на конкретной клетке
+            this.renderer.setPressed(cell.r, cell.c);
+            this.renderer.draw(this.game.grid, this.game.isGameOver);
+        }
     }
 
     // Обработка отпускания кнопки мыши (сброс эффекта утопания)
     onCanvasMouseUp(event) 
     {
+        if (this.game.isGameOver) return;
 
+        // Всегда сбрасываем эффект нажатия
+        this.renderer.setPressed(-1, -1);
+        this.renderer.draw(this.game.grid, this.game.isGameOver);
     }
 
     // Обработка ухода курсора с поля (сброс всех эффектов)
     onCanvasMouseLeave(event) 
     {
-
+        // Сбрасываем и наведение, и нажатие (на случай, если увели мышку с зажатой кнопкой)
+        this.renderer.setHover(-1, -1);
+        this.renderer.setPressed(-1, -1);
+        
+        // Перерисовываем
+        this.renderer.draw(this.game.grid, this.game.isGameOver);
     }
 
     // Приватный метод для настройки всех слушателей событий
