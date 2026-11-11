@@ -1,0 +1,48 @@
+:root {
+  --bg: #171a2d;           /* Основной темный фон страницы */
+  --text: #f6f5fa;         /* Основной цвет текста */
+  --muted: #9298b5;        /* Цвет второстепенного текста (подзаголовок) */
+  --purple: #6956e9;       /* Основной цвет кнопки */
+  --purple-hover: #7665ed; /* Цвет кнопки при наведении */
+  --win: #a6e6b0;          /* Цвет для сообщения о победе */
+  
+  /* Запас вокруг поля под свечение клеток (иначе оно обрежется краем canvas) */
+  --glow-margin: 24px; 
+}
+
+/* Сброс размеров. box-sizing: border-box означает, что padding не увеличивает общую ширину элемента  */
+* { box-sizing: border-box; }
+
+html, body { 
+  min-height: 100%; 
+  margin: 0; /* Убираем стандартные отступы браузера */
+}
+
+body {
+  min-height: 100vh; /* Занимает 100% высоты экрана */
+  display: grid;
+  place-items: center; /* Центрируем игру на экране */
+  padding: 32px 18px; /* Отступы для мобильных экранов */
+  
+  /* Радиальный градиент создает легкое свечение в центре экрана */
+  background: radial-gradient(circle at 50% 40%, rgba(64, 71, 122, .17), transparent 44%), var(--bg);
+  color: var(--text);
+  font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+/* Адаптивная ширина карточки */
+.page { width: min(460px, 100%, max(280px, calc(100vh - 281px))); }
+
+/* Основная карточка игры */
+.game {
+  width: 100%;
+  padding: 35px 44px 34px; /* Внутренние отступы: верх, бока, низ */
+  border-radius: 20px;     /* Скругление углов карточки */
+  
+  /* Легкий градиент, чтобы карточка не была плоской */
+  background: linear-gradient(145deg, rgba(45, 51, 88, .95), rgba(36, 41, 71, .98));
+  border: 1px solid rgba(73, 80, 126, .28);
+  
+  /* Двойная тень: внешняя (для объема) и внутренняя (светлый блик сверху) */
+  box-shadow: 0 22px 50px rgba(0, 0, 0, .28), inset 0 1px 0 rgba(255, 255, 255, .025);
+}
