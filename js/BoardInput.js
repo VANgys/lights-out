@@ -31,14 +31,11 @@ export class BoardInput {
         // Если клик был по клетке (а не в пустоту между ними)
         if (cell) 
         {
-            // Передаем ход в игровую логику
-            this.game.handleClick(cell.r, cell.c);
-            
-            // Сбрасываем состояние нажатия
-            this.renderer.setPressed(-1, -1);
-            
-            // Просим рендерер перерисовать поле с новым состоянием
-            this.renderer.draw(this.game.grid, this.game.isGameOver);
+        // сброс «утопания» ДО хода — чтобы notify() перерисовал уже без нажатия
+        this.renderer.setPressed(-1, -1);
+
+        // notify() внутри handleClick сам вызовет renderer.draw() и hud.updateCounter()
+        this.game.handleClick(cell.r, cell.c);
         }
     }
 
