@@ -139,5 +139,6 @@ export class Game {
         this.level = 1;
         this.isGameOver = false;
         this.generateLevel(this.level);
+        this.notify();
     }
 }
