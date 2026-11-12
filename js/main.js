@@ -11,6 +11,10 @@ const buttonEl = document.getElementById('restart-button');
 const winMessageEl = document.getElementById('win-message'); // ID из твоего HUD
 
 // 2. Создаем экземпляры классов
+const game = new Game();
+const renderer = new BoardRenderer(canvas);
+const hud = new HUD(counterEl, buttonEl, winMessageEl);
+const input = new BoardInput(canvas, game, renderer);
 
 
 // 3. Подписки на изменения состояния игры (Observer)
