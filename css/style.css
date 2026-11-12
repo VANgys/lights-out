@@ -85,3 +85,32 @@ h1 {
   margin-left: 4px;      /* Отступ от слова "Ходы:" */
 }
 
+/* 
+   Игровое поле (Canvas)
+*/
+
+/* Контейнер для поля */
+.field-area {
+  position: relative;   
+  aspect-ratio: 1;      
+  margin-bottom: 13px;
+  display: flex;         /* Центрируем Canvas внутри */
+  align-items: center;
+  justify-content: center;
+}
+
+/* Сам холст для рисования */
+.board-canvas {
+  position: absolute;    
+  top: calc(-1 * var(--glow-margin));    /* Сдвигаем вверх на 24px */
+  left: calc(-1 * var(--glow-margin));   /* Сдвигаем влево на 24px */
+  width: calc(100% + 2 * var(--glow-margin));  /* Увеличиваем ширину на 48px */
+  height: calc(100% + 2 * var(--glow-margin)); /* Увеличиваем высоту на 48px */
+  display: block;
+  
+  /* Защита от случайного выделения текста */
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation; 
+}
