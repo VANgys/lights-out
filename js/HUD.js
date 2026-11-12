@@ -19,7 +19,9 @@ export class HUD {
      * @param {number} moves - Текущее количество ходов
      */
     updateCounter(moves) {
-
+        if (this.counterEl) {
+            this.counterEl.textContent = moves;
+        }
     }
 
     /**
@@ -27,7 +29,7 @@ export class HUD {
      * Убираем атрибут hidden, чтобы текст появился на экране.
      */
     showWinMessage() {
-
+        
     }
 
     /**
