@@ -7,7 +7,10 @@
  */
 export class HUD {
     constructor(counterEl, buttonEl, winMessageEl) {
-
+        // Поля из UML
+        this.counterEl = counterEl;
+        this.buttonEl = buttonEl;
+        this.winMessageEl = winMessageEl;
     }
 
     /**
