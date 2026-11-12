@@ -171,3 +171,36 @@ h1 {
   outline: 2px solid rgba(255, 255, 255, .8); 
   outline-offset: 3px; 
 }
+
+/* 
+   Обработка ошибок и адаптивность
+*/
+
+/* Сообщение при отключенном JavaScript */
+.error-fallback {
+  width: 100%;
+  padding: 26px 18px;
+  text-align: center;
+  color: #e0e4fb;
+  font-size: 16px;
+  line-height: 1.5;
+  
+  border: 1px dashed rgba(160, 170, 215, .28);
+  border-radius: 14px;
+  background: rgba(24, 28, 50, .34);
+}
+
+/* Адаптивность для экранов смартфонов (ширина до 480px)
+   Уменьшаем отступы, чтобы игровое поле оставалось как можно больше */
+@media (max-width: 480px) {
+  .game { 
+    padding: 31px 26px 30px; 
+    border-radius: 18px; 
+  }
+  h1 { 
+    font-size: 27px; 
+  }
+  .subtitle { 
+    margin-bottom: 29px; 
+  }
+}
