@@ -114,3 +114,60 @@ h1 {
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation; 
 }
+
+/* 
+   Нижняя часть интерфейса (Сообщение о победе и Кнопка)
+*/
+
+/* Слот для сообщения о победе */
+.status-slot {
+  min-height: 28px;
+  margin: 0 0 10px;
+  display: flex;         
+  align-items: center;
+  justify-content: center;  
+  text-align: center;
+}
+
+.win-message { 
+  color: var(--win);     /* Салатовый цвет (из переменных) */
+  font-size: 17px; 
+  font-weight: 750; 
+
+
+/* Кнопка "Перезапустить игру" */
+.restart {
+  display: block;
+  width: 100%;           /* Кнопка на всю ширину карточки */
+  min-height: 48px;     
+  padding: 10px 12px;
+  border: 0;             /* Убираем стандартную рамку браузера */
+  border-radius: 10px;
+  background: var(--purple);
+  color: #fff;
+  font-size: 16px;
+  line-height: 1.2;
+  font-weight: 700;
+  cursor: pointer;       /* Меняем курсор на "руку" при наведении */
+  box-shadow: 0 7px 17px rgba(55, 42, 165, .20);
+  
+  /* Анимация для всех эффектов (наведение, нажатие) */
+  transition: background .14s ease, transform .12s ease, box-shadow .14s ease;
+}
+
+/* Эффект при наведении мыши */
+.restart:hover { 
+  background: var(--purple-hover); 
+  box-shadow: 0 9px 20px rgba(55, 42, 165, .28); /* Тень становится больше */
+}
+
+/* Эффект "утопания" при нажатии */
+.restart:active { 
+  transform: translateY(1px) scale(.99); /* Сдвиг на 1px вниз и легкое уменьшение */
+}
+
+/* Обводка при навигации с клавиатуры (клавиша Tab) */
+.restart:focus-visible { 
+  outline: 2px solid rgba(255, 255, 255, .8); 
+  outline-offset: 3px; 
+}
