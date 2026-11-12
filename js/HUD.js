@@ -29,7 +29,9 @@ export class HUD {
      * Убираем атрибут hidden, чтобы текст появился на экране.
      */
     showWinMessage() {
-        
+        if (this.winMessageEl) {
+            this.winMessageEl.hidden = false;
+        }
     }
 
     /**
@@ -37,7 +39,9 @@ export class HUD {
      * Возвращаем атрибут hidden.
      */
     hideWinMessage() {
-
+        if (this.winMessageEl) {
+            this.winMessageEl.hidden = true;
+        }
     }
 
     /**
