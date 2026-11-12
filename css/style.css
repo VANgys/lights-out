@@ -1,0 +1,206 @@
+:root {
+  --bg: #171a2d;           /* Основной темный фон страницы */
+  --text: #f6f5fa;         /* Основной цвет текста */
+  --muted: #9298b5;        /* Цвет второстепенного текста (подзаголовок) */
+  --purple: #6956e9;       /* Основной цвет кнопки */
+  --purple-hover: #7665ed; /* Цвет кнопки при наведении */
+  --win: #a6e6b0;          /* Цвет для сообщения о победе */
+  
+  /* Запас вокруг поля под свечение клеток (иначе оно обрежется краем canvas) */
+  --glow-margin: 24px; 
+}
+
+/* Сброс размеров. box-sizing: border-box означает, что padding не увеличивает общую ширину элемента  */
+* { box-sizing: border-box; }
+
+html, body { 
+  min-height: 100%; 
+  margin: 0; /* Убираем стандартные отступы браузера */
+}
+
+body {
+  min-height: 100vh; /* Занимает 100% высоты экрана */
+  display: grid;
+  place-items: center; /* Центрируем игру на экране */
+  padding: 32px 18px; /* Отступы для мобильных экранов */
+  
+  /* Радиальный градиент создает легкое свечение в центре экрана */
+  background: radial-gradient(circle at 50% 40%, rgba(64, 71, 122, .17), transparent 44%), var(--bg);
+  color: var(--text);
+  font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+/* Адаптивная ширина карточки */
+.page { width: min(460px, 100%, max(280px, calc(100vh - 281px))); }
+
+/* Основная карточка игры */
+.game {
+  width: 100%;
+  padding: 35px 44px 34px; /* Внутренние отступы: верх, бока, низ */
+  border-radius: 20px;     /* Скругление углов карточки */
+  
+  /* Легкий градиент, чтобы карточка не была плоской */
+  background: linear-gradient(145deg, rgba(45, 51, 88, .95), rgba(36, 41, 71, .98));
+  border: 1px solid rgba(73, 80, 126, .28);
+  
+  /* Двойная тень: внешняя (для объема) и внутренняя (светлый блик сверху) */
+  box-shadow: 0 22px 50px rgba(0, 0, 0, .28), inset 0 1px 0 rgba(255, 255, 255, .025);
+}
+
+/* 
+   Текстовые элементы (Заголовки и Счетчик)
+*/
+
+/* Главный заголовок */
+h1 {
+  margin: 0;             /* Убираем стандартный отступ браузера */
+  text-align: center;    /* Выравнивание по центру */
+  font-size: 29px;
+  line-height: 1.15;     /* Межстрочный интервал */
+  font-weight: 750;      /* Жирный шрифт */
+  letter-spacing: .1px;  /* Увеличение расстояния между буквами */
+}
+
+/* Подзаголовок "Погасите все клетки" */
+.subtitle {
+  margin: 7px 0 32px;    /* 7px сверху (близко к h1), 32px снизу (отступ до поля) */
+  text-align: center;
+  color: var(--muted);   
+  font-size: 15px;
+  line-height: 1.25;
+}
+
+/* Блок счетчика ходов */
+.moves {
+  margin: 0 0 22px;      /* Отступ снизу до игрового поля */
+  color: #98a0c1;
+  font-size: 16px;
+  line-height: 1;        /* Убираем лишнюю высоту строки */
+}
+
+/* Выделяем само число ходов, чтобы оно визуально отличалось от слова "Ходы:" */
+.moves-value { 
+  color: #f4f4f8;      /* Более светлый цвет для акцента */
+  font-weight: 500;      /* Средняя жирность */
+  margin-left: 4px;      /* Отступ от слова "Ходы:" */
+}
+
+/* 
+   Игровое поле (Canvas)
+*/
+
+/* Контейнер для поля */
+.field-area {
+  position: relative;   
+  aspect-ratio: 1;      
+  margin-bottom: 13px;
+  display: flex;         /* Центрируем Canvas внутри */
+  align-items: center;
+  justify-content: center;
+}
+
+/* Сам холст для рисования */
+.board-canvas {
+  position: absolute;    
+  top: calc(-1 * var(--glow-margin));    /* Сдвигаем вверх на 24px */
+  left: calc(-1 * var(--glow-margin));   /* Сдвигаем влево на 24px */
+  width: calc(100% + 2 * var(--glow-margin));  /* Увеличиваем ширину на 48px */
+  height: calc(100% + 2 * var(--glow-margin)); /* Увеличиваем высоту на 48px */
+  display: block;
+  
+  /* Защита от случайного выделения текста */
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation; 
+}
+
+/* 
+   Нижняя часть интерфейса (Сообщение о победе и Кнопка)
+*/
+
+/* Слот для сообщения о победе */
+.status-slot {
+  min-height: 28px;
+  margin: 0 0 10px;
+  display: flex;         
+  align-items: center;
+  justify-content: center;  
+  text-align: center;
+}
+
+.win-message { 
+  color: var(--win);     /* Салатовый цвет (из переменных) */
+  font-size: 17px; 
+  font-weight: 750; 
+}
+
+/* Кнопка "Перезапустить игру" */
+.restart {
+  display: block;
+  width: 100%;           /* Кнопка на всю ширину карточки */
+  min-height: 48px;     
+  padding: 10px 12px;
+  border: 0;             /* Убираем стандартную рамку браузера */
+  border-radius: 10px;
+  background: var(--purple);
+  color: #fff;
+  font-size: 16px;
+  line-height: 1.2;
+  font-weight: 700;
+  cursor: pointer;       /* Меняем курсор на "руку" при наведении */
+  box-shadow: 0 7px 17px rgba(55, 42, 165, .20);
+  
+  /* Анимация для всех эффектов (наведение, нажатие) */
+  transition: background .14s ease, transform .12s ease, box-shadow .14s ease;
+}
+
+/* Эффект при наведении мыши */
+.restart:hover { 
+  background: var(--purple-hover); 
+  box-shadow: 0 9px 20px rgba(55, 42, 165, .28); /* Тень становится больше */
+}
+
+/* Эффект "утопания" при нажатии */
+.restart:active { 
+  transform: translateY(1px) scale(.99); /* Сдвиг на 1px вниз и легкое уменьшение */
+}
+
+/* Обводка при навигации с клавиатуры (клавиша Tab) */
+.restart:focus-visible { 
+  outline: 2px solid rgba(255, 255, 255, .8); 
+  outline-offset: 3px; 
+}
+
+/* 
+   Обработка ошибок и адаптивность
+*/
+
+/* Сообщение при отключенном JavaScript */
+.error-fallback {
+  width: 100%;
+  padding: 26px 18px;
+  text-align: center;
+  color: #e0e4fb;
+  font-size: 16px;
+  line-height: 1.5;
+  
+  border: 1px dashed rgba(160, 170, 215, .28);
+  border-radius: 14px;
+  background: rgba(24, 28, 50, .34);
+}
+
+/* Адаптивность для экранов смартфонов (ширина до 480px)
+   Уменьшаем отступы, чтобы игровое поле оставалось как можно больше */
+@media (max-width: 480px) {
+  .game { 
+    padding: 31px 26px 30px; 
+    border-radius: 18px; 
+  }
+  h1 { 
+    font-size: 27px; 
+  }
+  .subtitle { 
+    margin-bottom: 29px; 
+  }
+}
