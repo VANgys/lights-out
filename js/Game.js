@@ -6,8 +6,23 @@ export class Game {
         this.moves = 0;
         this.level = 1;
         this.isGameOver = false;
+
+        // список подписчиков
+        this.listeners = [];
     }
 
+    // регистрация колбэка
+    subscribe(callback) {
+        if (typeof callback !== 'function')
+            throw new Error('subscribe: callback must be a function');
+        this.listeners.push(callback);
+    }
+
+    // оповещение всех
+    notify() {
+        for (const fn of this.listeners) fn(this);
+    }
+    
     // Обработка клика
     handleClick(r, c) 
     {
@@ -31,6 +46,9 @@ export class Game {
             else
                 this.isGameOver = true; // Победа на 15 уровне
         }
+
+        // в самом конце сообщаем, что состояние изменилось
+        this.notify();
     }
 
     // Метод инверсии клетки и её соседей
