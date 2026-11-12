@@ -48,7 +48,7 @@ export class HUD {
      * [FR-7]: Показ сообщения об ошибке генерации уровня.
      */
     showLevelGenerationError() {
-
+        alert("Не удалось сгенерировать уровень. Пожалуйста, перезапустите игру.");
     }
 
     /**
@@ -57,6 +57,14 @@ export class HUD {
      * @param {Function} callback - Функция, которая вызовется при клике
      */
     onRestartClick(callback) {
-        
+    if (!this.buttonEl) return;
+
+    // снимаем предыдущий подписчик, если был
+    if (this._restartHandler) {
+        this.buttonEl.removeEventListener('click', this._restartHandler);
+    }
+
+    this._restartHandler = () => callback();
+    this.buttonEl.addEventListener('click', this._restartHandler);    
     }
 }
