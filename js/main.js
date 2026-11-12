@@ -18,7 +18,20 @@ const input = new BoardInput(canvas, game, renderer);
 
 
 // 3. Подписки на изменения состояния игры (Observer)
-
+game.subscribe((g) => {
+    // Обновляем поле
+    renderer.draw(g.grid, g.isGameOver);
+    
+    // Обновляем счетчик
+    hud.updateCounter(g.moves);
+    
+    // Показываем или скрываем сообщение о победе
+    if (g.isGameOver) {
+        hud.showWinMessage();
+    } else {
+        hud.hideWinMessage();
+    }
+});
 
 // 4. Инициализация первого уровня (вызовет notify и отрисовывает поле)
 
