@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lights Out — модульные тесты</title>
+    <style>
+        body { font-family: ui-sans-serif, "Segoe UI", Roboto, Arial, sans-serif; background: #171a2d; color: #f6f5fa; margin: 0; padding: 24px 16px; }
+        main { max-width: 860px; margin: 0 auto; }
+        h1 { margin: 0 0 8px; font-size: 24px; }
+        h2 { font-size: 16px; margin: 24px 0 8px; color: #9298b5; }
+        #summary { font-size: 18px; font-weight: 700; padding: 10px 14px; border-radius: 8px; background: #242947; }
+        div.pass, div.fail { padding: 3px 0; font-size: 14px; }
+        .pass { color: #a6e6b0; }
+        .fail { color: #ff8a8a; }
+    </style>
+</head>
+<body>
+    <main>
+        <h1>Lights Out — модульные тесты</h1>
+        <div id="summary">Выполнение…</div>
+        <div id="results"></div>
+    </main>
+
+    <script type="module">
+        import { run } from './lib/test-runner.js';
+        import './unit/Game.test.js';
+        import './unit/HUD.test.js';
+        import './unit/BoardInput.test.js';
+        import './unit/BoardRenderer.test.js';
+
+        run(document.getElementById('results'));
+    </script>
+</body>
+</html>
