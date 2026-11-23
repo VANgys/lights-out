@@ -6,10 +6,11 @@
  * и обработку нажатия на кнопку перезапуска.
  */
 export class HUD {
-    constructor(counterEl, buttonEl, winMessageEl) {
+    constructor(counterEl, buttonEl, restartLevelEl, winMessageEl) {
         // Поля из UML
         this.counterEl = counterEl;
         this.buttonEl = buttonEl;
+        this.restartLevelEl = restartLevelEl;
         this.winMessageEl = winMessageEl;
     }
 
@@ -66,5 +67,19 @@ export class HUD {
 
     this._restartHandler = () => callback();
     this.buttonEl.addEventListener('click', this._restartHandler);    
+    }
+
+    /**
+     * Подписка на клик по кнопке перезапуска уровня.
+     */
+    onRestartLevelClick(callback) {
+        if (!this.restartLevelEl) return;
+
+        if (this._restartLevelHandler) {
+            this.restartLevelEl.removeEventListener('click', this._restartLevelHandler);
+        }
+
+        this._restartLevelHandler = () => callback();
+        this.restartLevelEl.addEventListener('click', this._restartLevelHandler);
     }
 }
