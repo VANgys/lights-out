@@ -23,11 +23,19 @@
             <h1>Lights Out</h1>
             <div class="subtitle">Погасите все клетки</div>
 
-            <!-- [UI-2 / FR-5 / NFR-6]: Счётчик ходов
-                 Число вынесено в <span> с id, чтобы JS обновлял его безопасно 
-                 через textContent, не затрагивая текст "Ходы:" -->
-            <div class="moves">
-                Ходы: <span class="moves-value" id="moves-value">0</span>
+            <!-- НОВЫЙ КОНТЕЙНЕР: Счетчик и кнопки на одной линии -->
+            <div class="top-panel">
+                <!-- [UI-2 / FR-5 / NFR-6]: Счётчик ходов -->
+                <div class="moves">
+                    Ходы: <span class="moves-value" id="moves-value">0</span>
+                </div>
+
+                <!-- Кнопки выбора размера -->
+                <div class="size-selector">
+                    <button class="size-btn" data-size="3" title="Игра состоит из 9 уровней">3×3</button>
+                    <button class="size-btn active" data-size="5" title="Игра состоит из 15 уровней">5×5</button>
+                    <button class="size-btn" data-size="7" title="Игра состоит из 25 уровней">7×7</button>
+                </div>
             </div>
 
             <!-- [UI-1 / FR-1]: Игровое поле на Canvas

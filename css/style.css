@@ -70,12 +70,20 @@ h1 {
   line-height: 1.25;
 }
 
+/* Контейнер для верхней панели (счетчик слева, кнопки справа) */
+.top-panel {
+  display: flex;
+  justify-content: space-between; /* Разносим элементы по краям */
+  align-items: center;            /* Выравниваем по вертикали */
+  margin-bottom: 22px;            /* Отступ до игрового поля */
+}
+
 /* Блок счетчика ходов */
 .moves {
-  margin: 0 0 22px;      /* Отступ снизу до игрового поля */
   color: #98a0c1;
   font-size: 16px;
-  line-height: 1;        /* Убираем лишнюю высоту строки */
+  line-height: 1;
+  white-space: nowrap; /* Запрещаем перенос текста "Ходы:" */
 }
 
 /* Выделяем само число ходов, чтобы оно визуально отличалось от слова "Ходы:" */
@@ -208,4 +216,31 @@ h1 {
   .subtitle { 
     margin-bottom: 29px; 
   }
+}
+
+.size-selector {
+  display: flex;
+  gap: 6px; /* Расстояние между кнопками */
+}
+
+.size-btn {
+  padding: 4px 10px; 
+  border-radius: 12px;
+  border: 1px solid var(--purple);
+  background: transparent;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.size-btn:hover {
+  background: rgba(105, 86, 233, 0.2);
+}
+
+.size-btn.active {
+  background: var(--purple);
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(55, 42, 165, .3);
 }
