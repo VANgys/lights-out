@@ -1,3 +1,4 @@
+/* Глобальные переменные (цвета и отступы) */
 :root {
   --bg: #171a2d;           /* Основной темный фон страницы */
   --text: #f6f5fa;         /* Основной цвет текста */
@@ -48,41 +49,105 @@ body {
 }
 
 /* 
-   Текстовые элементы (Заголовки и Счетчик)
+   Верхняя панель (Заголовок + Размеры)
 */
 
-/* Главный заголовок */
-h1 {
-  margin: 0;             /* Убираем стандартный отступ браузера */
-  text-align: center;    /* Выравнивание по центру */
-  font-size: 29px;
-  line-height: 1.15;     /* Межстрочный интервал */
-  font-weight: 750;      /* Жирный шрифт */
-  letter-spacing: .1px;  /* Увеличение расстояния между буквами */
+/* Контейнер для заголовка и кнопок размеров */
+.top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 18px;
 }
 
-/* Подзаголовок "Погасите все клетки" */
-.subtitle {
-  margin: 7px 0 32px;    /* 7px сверху (близко к h1), 32px снизу (отступ до поля) */
-  text-align: center;
-  color: var(--muted);   
-  font-size: 15px;
-  line-height: 1.25;
+.titles h1 { 
+  font-size: 22px; 
+  font-weight: 750; 
+  margin: 0 0 4px 0;
 }
 
-/* Блок счетчика ходов */
-.moves {
-  margin: 0 0 22px;      /* Отступ снизу до игрового поля */
-  color: #98a0c1;
+.titles .subtitle { 
+  margin: 0;
+  font-size: 13px; 
+  color: var(--muted); 
+}
+
+/* Селектор размеров поля */
+.size-selector { 
+  display: flex; 
+  gap: 6px; 
+  flex-shrink: 0; 
+}
+
+/* Кнопки выбора размера поля */
+.size-btn {
+  min-width: 44px;
+  height: 28px;
+  border: 1px solid rgba(105,86,233,0.4);
+  border-radius: 999px; /* Форма таблетки */
+  background: transparent;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.size-btn:hover { 
+  background: rgba(255,255,255,.05); 
+}
+
+/* Активный размер (на котором сейчас играет пользователь) */
+.size-btn.active {
+  background: var(--purple);
+  border-color: var(--purple);
+  color: #fff;
+}
+
+/* 
+  Панель метрик 
+*/
+.metrics {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 14px;
+  margin-bottom: 16px;
+  background: rgba(255,255,255,.035);
+  border: 1px solid rgba(255,255,255,.05);
+  border-radius: 14px;
+}
+
+.metric { 
+  text-align: center; 
+  flex: 1; 
+}
+
+.metric .label {
+  font-size: 10px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+
+.metric .value {
+  margin-top: 2px;
   font-size: 16px;
-  line-height: 1;        /* Убираем лишнюю высоту строки */
+  font-weight: 700;
+  color: var(--text);
 }
 
-/* Выделяем само число ходов, чтобы оно визуально отличалось от слова "Ходы:" */
-.moves-value { 
-  color: #f4f4f8;      /* Более светлый цвет для акцента */
-  font-weight: 500;      /* Средняя жирность */
-  margin-left: 4px;      /* Отступ от слова "Ходы:" */
+.metric .value.yellow { 
+  color: #ffb30b; /* Желтый цвет для очков (как у включенных клеток) */
+}
+
+/* Вертикальные разделители между метриками */
+.divider {
+  width: 1.5px;
+  height: 28px;
+  background: rgba(255,255,255,.08);
 }
 
 /* 
@@ -92,7 +157,7 @@ h1 {
 /* Контейнер для поля */
 .field-area {
   position: relative;   
-  aspect-ratio: 1;      
+  aspect-ratio: 1;       /* Держим форму квадрата */ 
   margin-bottom: 13px;
   display: flex;         /* Центрируем Canvas внутри */
   align-items: center;
@@ -116,7 +181,7 @@ h1 {
 }
 
 /* 
-   Нижняя часть интерфейса (Сообщение о победе и Кнопка)
+   Нижняя часть интерфейса (Сообщение о победе)
 */
 
 /* Слот для сообщения о победе */
@@ -172,9 +237,19 @@ h1 {
   outline-offset: 3px; 
 }
 
-/* Отступ для второй кнопки, чтобы она не прилипала к первой */
+/* Кнопка перезапуска текущего уровня (второстепенная кнопка) */
 .restart-level-btn {
   margin-top: 12px;
+  background: rgba(255, 255, 255, 0.06); /* Полупрозрачный светлый фон */
+  border: 1px solid rgba(105, 86, 233, 0.4); /* Тонкая рамка */
+  color: var(--text);
+  box-shadow: none; /* Убираем фиолетовую тень от главной кнопки */
+}
+
+/* Эффект при наведении на второстепенную кнопку */
+.restart-level-btn:hover {
+  background: rgba(255, 255, 255, 0.12); /* Становится чуть светлее */
+  box-shadow: none; /* Убираем тень при наведении */
 }
 
 /* 
@@ -196,16 +271,17 @@ h1 {
 }
 
 /* Адаптивность для экранов смартфонов (ширина до 480px)
-   Уменьшаем отступы, чтобы игровое поле оставалось как можно больше */
+   Уменьшаем отступы, чтобы игровое поле оставалось как можно больше 
+*/
 @media (max-width: 480px) {
   .game { 
     padding: 31px 26px 30px; 
     border-radius: 18px; 
   }
-  h1 { 
-    font-size: 27px; 
+  .titles h1 { 
+    font-size: 20px; /* Чуть уменьшаем заголовок */
   }
-  .subtitle { 
-    margin-bottom: 29px; 
+  .titles .subtitle { 
+    font-size: 12px; /* Чуть уменьшаем подзаголовок */
   }
 }

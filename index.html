@@ -19,21 +19,51 @@
         <!-- Основной контейнер игры -->
         <main class="game" aria-label="Игра Lights Out">
             
+            <!-- Верхняя панель: Заголовок слева, кнопки размеров справа -->
             <!-- [UI-4]: Заголовок и подзаголовок игры -->
-            <h1>Lights Out</h1>
-            <div class="subtitle">Погасите все клетки</div>
+            <div class="top">
+                <div class="titles">
+                    <h1>Lights Out</h1>
+                    <div class="subtitle">Погасите все клетки</div>
+                </div>
+                
+                <div class="size-selector">
+                    <button type="button" class="size-btn" data-size="3">3×3</button>
+                    <button type="button" class="size-btn active" data-size="5">5×5</button>
+                    <button type="button" class="size-btn" data-size="7">7×7</button>
+                </div>
+            </div>
 
-            <!-- [UI-2 / FR-5 / NFR-6]: Счётчик ходов
-                 Число вынесено в <span> с id, чтобы JS обновлял его безопасно 
-                 через textContent, не затрагивая текст "Ходы:" -->
-            <div class="moves">
-                Ходы: <span class="moves-value" id="moves-value">0</span>
+            <!-- Полоса метрик: Уровень, Ходы, Очки, Рекорд -->
+            <div class="metrics">
+                <div class="metric">
+                    <div class="label">Уровень</div>
+                    <div class="value"><span id="current-level">1</span>/<span id="max-level">15</span></div>
+                </div>
+                <div class="divider"></div>
+                
+                <div class="metric">
+                    <div class="label">Ходы</div>
+                    <div class="value" id="moves-value">0</div>
+                </div>
+                <div class="divider"></div>
+                
+                <div class="metric">
+                    <div class="label">Очки</div>
+                    <div class="value yellow" id="score-value">0</div>
+                </div>
+                <div class="divider"></div>
+                
+                <div class="metric">
+                    <div class="label">Рекорд</div>
+                    <div class="value" id="highscore-value">0</div>
+                </div>
             </div>
 
             <!-- [UI-1 / FR-1]: Игровое поле на Canvas
                  id="board" — точка привязки для BoardRenderer и BoardInput -->
             <div class="field-area">
-                <canvas id="board" width="400" height="400" class="board-canvas" role="img" aria-label="Игровое поле 5 на 5"></canvas>
+                <canvas id="board" width="400" height="400" class="board-canvas" role="img" aria-label="Игровое поле"></canvas>
                 
                 <!-- [UI-5 / FR-1]: Статическое сообщение об ошибке при отключенном JS -->
                 <noscript>
