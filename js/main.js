@@ -8,12 +8,13 @@ import { HUD } from './HUD.js';
 const canvas = document.getElementById('board');
 const counterEl = document.getElementById('moves-value'); 
 const buttonEl = document.getElementById('restart-button'); 
+const restartLevelBtn = document.getElementById('restart-level-button');
 const winMessageEl = document.getElementById('win-message'); // ID из твоего HUD
 
 // 2. Создаем экземпляры классов
 const game = new Game();
 const renderer = new BoardRenderer(canvas);
-const hud = new HUD(counterEl, buttonEl, winMessageEl);
+const hud = new HUD(counterEl, buttonEl, restartLevelBtn, winMessageEl);
 const input = new BoardInput(canvas, game, renderer);
 
 
@@ -36,7 +37,12 @@ game.subscribe((g) => {
 // 4. Инициализация первого уровня (вызовет notify и отрисовывает поле)
 game.restart();
 
-// 5. Обработка кнопки «Перезапустить»
+// 5. Обработка кнопки "Перезапустить игру"
 hud.onRestartClick(() => {
     game.restart(); // Внутри restart() должен вызываться notify() для обновления UI
+});
+
+// 6. Обработка кнопки "Перезапустить уровень"
+hud.onRestartLevelClick(() => {
+    game.restartLevel();
 });

@@ -141,4 +141,12 @@ export class Game {
         this.generateLevel(this.level);
         this.notify();
     }
+
+    // Метод перезапуска текущего уровня
+    restartLevel() 
+    {
+        this.isGameOver = false; 
+        this.generateLevel(this.level); // Генерируем новый уровень той же сложности
+        this.notify(); // Оповещаем HUD и Renderer об изменениях
+    }
 }
