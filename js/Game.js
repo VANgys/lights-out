@@ -116,9 +116,9 @@ export class Game {
         let selectedMoves;
 
         if (this.generator === 'template')
-            selectedMoves = this.generateFromTemplate(n);
+            selectedMoves = this.#generateFromTemplate(n);
         else if (this.generator === 'random')
-            selectedMoves = this.generateRandom(n);
+            selectedMoves = this.#generateRandom(n);
         else
             throw new Error('Unknown generator');
 
@@ -156,7 +156,7 @@ export class Game {
         const template =
             templates[Math.floor(Math.random() * templates.length)];
 
-        return this.shuffle([...template]).slice(0, n);
+        return this.#shuffle([...template]).slice(0, n);
     }
 
     #generateRandom(n) 
@@ -169,7 +169,7 @@ export class Game {
                 cells.push([r, c]);
         }
 
-        return this.shuffle(cells).slice(0, n);
+        return this.#shuffle(cells).slice(0, n);
     }
 
     #shuffle(array) 

@@ -11,7 +11,7 @@ export class BoardInput {
         
         // константы
         this.PADDING = CONFIG.GLOW_MARGIN_PX;
-        this.#setBoardSize(boardSize);
+        this.setBoardSize(boardSize);
 
         // Вызываем метод для настройки событий
         this.#setupEvents();
@@ -140,7 +140,8 @@ export class BoardInput {
         this.canvas.addEventListener('mouseleave', this.onCanvasMouseLeave);
     }
 
-    #setBoardSize(size) 
+    // Метод для установки размера поля
+    setBoardSize(size) 
     {
         this.SIZE = size;
 

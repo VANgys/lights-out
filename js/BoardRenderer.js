@@ -6,7 +6,7 @@ export class BoardRenderer {
         
         // Константы для отрисовки
         this.PADDING = CONFIG.GLOW_MARGIN_PX;
-        this.#setBoardSize(boardSize);
+        this.setBoardSize(boardSize);
         
         // Цвета
         // TODO: Сверить цвета с CSS
@@ -119,7 +119,7 @@ export class BoardRenderer {
     }
 
     // Вспомогательный метод
-    #setBoardSize(size) 
+    setBoardSize(size) 
     {
         this.SIZE = size;
 
