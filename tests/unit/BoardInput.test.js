@@ -7,6 +7,7 @@ import { describe, it, expect, beforeEach } from '../lib/test-runner.js';
 import { BoardInput } from '../../js/BoardInput.js';
 import { Game } from '../../js/Game.js';
 import { emptyGrid, fakeCanvas, fakeRenderer, cellCenter, gapPoint } from '../lib/helpers.js';
+import { BOARD_PRESETS } from '../../js/config.js';
 
 let canvas, game, renderer, input;
 
@@ -18,9 +19,9 @@ function clickAt({ clientX, clientY }) {
 describe('BoardInput.getCell: перевод координат в клетку', () => {
     beforeEach(() => {
         canvas = fakeCanvas();
-        game = new Game();
+        game = new Game(BOARD_PRESETS[5]);
         game.restart();
-        input = new BoardInput(canvas, game, fakeRenderer());
+        input = new BoardInput(canvas, game, fakeRenderer(), BOARD_PRESETS[5].size);
     });
 
     it('Центр клетки (0,0) → { r: 0, c: 0 }', () => {
@@ -53,7 +54,7 @@ describe('BoardInput.getCell: перевод координат в клетку'
 
     it('Учитывается масштаб: Canvas растянут до 800px и сдвинут', () => {
         canvas = fakeCanvas(800, 100, 50);
-        input = new BoardInput(canvas, game, fakeRenderer());
+        input = new BoardInput(canvas, game, fakeRenderer(), BOARD_PRESETS[5].size);
         const p = cellCenter(3, 1, 800, 100, 50);
         expect(input.getCell(p.clientX, p.clientY)).toEqual({ r: 3, c: 1 });
     });
@@ -62,12 +63,12 @@ describe('BoardInput.getCell: перевод координат в клетку'
 describe('BoardInput: клики по полю', () => {
     beforeEach(() => {
         canvas = fakeCanvas();
-        game = new Game();
+        game = new Game(BOARD_PRESETS[5]);
         game.restart();
         // Все клетки включены — поле не решится за несколько ходов
         game.grid = emptyGrid().map(row => row.fill(1));
         renderer = fakeRenderer();
-        input = new BoardInput(canvas, game, renderer);
+        input = new BoardInput(canvas, game, renderer, BOARD_PRESETS[5].size);
     });
 
     it('Клик по клетке засчитывает ход и инвертирует клетку', () => {
@@ -109,10 +110,10 @@ describe('BoardInput: клики по полю', () => {
 describe('BoardInput: эффекты наведения и нажатия', () => {
     beforeEach(() => {
         canvas = fakeCanvas();
-        game = new Game();
+        game = new Game(BOARD_PRESETS[5]);
         game.restart();
         renderer = fakeRenderer();
-        input = new BoardInput(canvas, game, renderer);
+        input = new BoardInput(canvas, game, renderer, BOARD_PRESETS[5].size);
     });
 
     it('Наведение на клетку передаёт её в renderer.setHover и перерисовывает поле', () => {
