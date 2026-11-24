@@ -1,7 +1,8 @@
 import { CONFIG } from './config.js';
 
 export class BoardInput {
-    constructor(canvas, game, renderer) {
+    constructor(canvas, game, renderer, boardSize) 
+    {
         this.canvas = canvas;
         
         // Зависимости
@@ -9,10 +10,8 @@ export class BoardInput {
         this.renderer = renderer;
         
         // константы
-        this.SIZE = CONFIG.BOARD_SIZE;
         this.PADDING = CONFIG.GLOW_MARGIN_PX;
-        this.GAP = canvas.width * CONFIG.GAP_RATIO;
-        this.CELL = (canvas.width - this.PADDING * 2 - this.GAP * (this.SIZE - 1)) / this.SIZE;
+        this.setBoardSize(boardSize);
 
         // Вызываем метод для настройки событий
         this.#setupEvents();
@@ -139,5 +138,21 @@ export class BoardInput {
         this.canvas.addEventListener('mousedown', this.onCanvasMouseDown);
         this.canvas.addEventListener('mouseup', this.onCanvasMouseUp);
         this.canvas.addEventListener('mouseleave', this.onCanvasMouseLeave);
+    }
+
+    // Метод для установки размера поля
+    setBoardSize(size) 
+    {
+        this.SIZE = size;
+
+        const width = this.canvas.width;
+
+        this.GAP = width * CONFIG.GAP_RATIO;
+
+        this.CELL = (
+            width -
+            this.PADDING * 2 -
+            this.GAP * (this.SIZE - 1)
+        ) / this.SIZE;
     }
 }

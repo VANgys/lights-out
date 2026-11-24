@@ -6,12 +6,23 @@
  * и обработку нажатия на кнопку перезапуска.
  */
 export class HUD {
-    constructor(counterEl, buttonEl, restartLevelEl, winMessageEl) {
-        // Поля из UML
-        this.counterEl = counterEl;
-        this.buttonEl = buttonEl;
-        this.restartLevelEl = restartLevelEl;
-        this.winMessageEl = winMessageEl;
+    constructor(
+    counterEl,
+    buttonEl,
+    restartLevelEl,
+    winMessageEl,
+    sizeButtons,
+    currentLevelEl,
+    maxLevelEl
+    ) {
+    this.counterEl = counterEl;
+    this.buttonEl = buttonEl;
+    this.restartLevelEl = restartLevelEl;
+    this.winMessageEl = winMessageEl;
+
+    this.sizeButtons = Array.from(sizeButtons ?? []);
+    this.currentLevelEl = currentLevelEl;
+    this.maxLevelEl = maxLevelEl;
     }
 
     /**
@@ -81,5 +92,47 @@ export class HUD {
 
         this._restartLevelHandler = () => callback();
         this.restartLevelEl.addEventListener('click', this._restartLevelHandler);
+    }
+
+    onBoardSizeChange(callback) 
+    {
+        this.sizeButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const size = Number(button.dataset.size);
+
+                if (Number.isInteger(size))
+                    callback(size);
+            });
+        });
+    }
+
+    updateLevelInfo(level, maxLevel) 
+    {
+        if (this.currentLevelEl)
+            this.currentLevelEl.textContent = level;
+
+        if (this.maxLevelEl)
+            this.maxLevelEl.textContent = maxLevel;
+    }
+
+    setActiveBoardSize(size) 
+    {
+        this.sizeButtons.forEach(button => {
+            const isActive =
+                Number(button.dataset.size) === size;
+
+            button.classList.toggle('active', isActive);
+            button.setAttribute('aria-pressed', String(isActive));
+        });
+    }
+
+    // Блокировка/разблокировка кнопки перезапуска уровня
+    setRestartLevelDisabled(isDisabled) 
+    {
+        if (this.restartLevelEl) 
+        {
+            this.restartLevelEl.disabled = isDisabled;
+            this.restartLevelEl.classList.toggle('disabled', isDisabled); 
+        }
     }
 }

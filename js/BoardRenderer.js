@@ -1,17 +1,12 @@
 import { CONFIG } from './config.js';
 
 export class BoardRenderer {
-    constructor(canvas) {
+    constructor(canvas, boardSize) {
         this.ctx = canvas.getContext('2d');
         
         // Константы для отрисовки
-        // TODO: Подогнать размеры под финальный HTML, если изменятся габариты canvas
-        this.SIZE = CONFIG.BOARD_SIZE;
         this.PADDING = CONFIG.GLOW_MARGIN_PX;
-
-        const currentWidth = canvas.width;
-        this.GAP = currentWidth * CONFIG.GAP_RATIO;
-        this.CELL = (currentWidth - this.PADDING * 2 - this.GAP * (this.SIZE - 1)) / this.SIZE;
+        this.setBoardSize(boardSize);
         
         // Цвета
         // TODO: Сверить цвета с CSS
@@ -121,5 +116,28 @@ export class BoardRenderer {
         this.ctx.arcTo(x, y + h, x, y, r);
         this.ctx.arcTo(x, y, x + w, y, r);
         this.ctx.closePath();
+    }
+
+    // Вспомогательный метод
+    setBoardSize(size) 
+    {
+        this.SIZE = size;
+
+        const width = this.ctx.canvas.width;
+
+        this.GAP = width * CONFIG.GAP_RATIO;
+
+        this.CELL = (
+            width -
+            this.PADDING * 2 -
+            this.GAP * (this.SIZE - 1)
+        ) / this.SIZE;
+
+        this.BORDER_RADIUS =
+            this.CELL * CONFIG.RADIUS_RATIO;
+
+        // Сбрасываем визуальные эффекты старого поля
+        this.setHover(-1, -1);
+        this.setPressed(-1, -1);
     }
 }

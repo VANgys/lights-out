@@ -1,14 +1,19 @@
-import { CONFIG } from './config.js';
-
 export class Game {
-    constructor() {
-        this.grid = [];
-        this.moves = 0;
-        this.level = 1;
-        this.isGameOver = false;
+    constructor(preset) 
+    {
+    if (!preset)
+        throw new Error('Game: preset is required');
 
-        // список подписчиков
-        this.listeners = [];
+    this.boardSize = preset.size;
+    this.maxLevel = preset.maxLevel;
+    this.generator = preset.generator;
+
+    this.grid = [];
+    this.moves = 0;
+    this.level = 1;
+    this.isGameOver = false;
+
+    this.listeners = [];
     }
 
     // регистрация колбэка
@@ -38,7 +43,7 @@ export class Game {
         // Проверка победы
         if (this.checkWin()) 
         {
-            if (this.level < CONFIG.MAX_LEVEL) 
+            if (this.level < this.maxLevel) 
             {
                 this.level++;
                 this.generateLevel(this.level); // Вызываем генерацию
@@ -68,7 +73,7 @@ export class Game {
             const nc = c + dc;
             
             // Проверка на выход за границы поля 5x5
-            if (nr >= 0 && nr < CONFIG.BOARD_SIZE && nc >= 0 && nc < CONFIG.BOARD_SIZE)
+            if (nr >= 0 && nr < this.boardSize && nc >= 0 && nc < this.boardSize)
                 // XOR-инверсия: 0 становится 1, 1 становится 0
                 this.grid[nr][nc] = this.grid[nr][nc] === 0 ? 1 : 0;
         }
@@ -77,9 +82,9 @@ export class Game {
     // Метод проверки победы
     checkWin() 
     {
-        for (let r = 0; r < CONFIG.BOARD_SIZE; r++) 
+        for (let r = 0; r < this.boardSize; r++) 
         {
-            for (let c = 0; c < CONFIG.BOARD_SIZE; c++) 
+            for (let c = 0; c < this.boardSize; c++) 
             {
                 if (this.grid[r][c] === 1)
                     return false; // Есть включенная клетка
@@ -90,47 +95,109 @@ export class Game {
     }
 
     // Метод генерации уровня
-    generateLevel(n) 
+    generateLevel(n)
     {
-        this.moves = 0;
-        
-        // Создаем пустое поле
-        this.grid = [];
-        for (let r = 0; r < CONFIG.BOARD_SIZE; r++) 
-            this.grid.push(new Array(CONFIG.BOARD_SIZE).fill(0));
+        if (
+            !Number.isInteger(n) ||
+            n < 1 ||
+            n > this.maxLevel ||
+            n > this.boardSize ** 2
+        )
+            throw new Error(`Invalid level: ${n}`);
 
-        // Четыре эталонных минимальных решения (по 15 клеток)
+        let attempts = 0;
+        const maxAttempts = 10;
+        let isGenerated = false;
+        while (attempts < maxAttempts && !isGenerated) 
+        {
+            this.moves = 0;
+
+            // Создаём пустое поле нужного размера
+            this.grid = Array.from(
+                { length: this.boardSize },
+                () => Array(this.boardSize).fill(0)
+            );
+
+            let selectedMoves;
+
+            if (this.generator === 'template')
+                selectedMoves = this.#generateFromTemplate(n);
+            else if (this.generator === 'random')
+                selectedMoves = this.#generateRandom(n);
+            else
+                throw new Error('Unknown generator');
+
+            if (selectedMoves.length !== n)
+                throw new Error('Generator returned incorrect number of moves');
+
+            // Применяем выбранные ходы
+            for (const [r, c] of selectedMoves)
+                this.toggle(r, c);
+
+            // Проверяем, не осталось ли поле полностью выключенным
+            if (!this.checkWin())
+                isGenerated = true; // Поле не пустое, успех!
+
+            attempts++;
+        }
+
+        // Если после 10 попыток не удалось — выбрасываем ошибку
+        if (!isGenerated)
+            throw new Error('Не удалось сгенерировать уровень после 10 попыток.');
+    }
+
+    #generateFromTemplate(n) 
+    {
+        if (n > 15) 
+        throw new Error('Template contains only 15 moves');
+
         const templates = [
-            // Исходный вариант
-            [[0,1],[0,2],[0,4],[1,1],[1,2],[1,3],[2,2],[2,3],[2,4],[3,0],[3,1],[3,3],[3,4],[4,0],[4,1]],
-            
-            // Поворот на 90 градусов
-            [[0,0],[0,1],[1,0],[1,1],[1,3],[1,4],[2,2],[2,3],[2,4],[3,1],[3,2],[3,3],[4,1],[4,2],[4,4]],
-            
-            // Поворот на 180 градусов
-            [[0,3],[0,4],[1,0],[1,1],[1,3],[1,4],[2,0],[2,1],[2,2],[3,1],[3,2],[3,3],[4,0],[4,2],[4,3]],
-            
-            // Поворот на 270 градусов
-            [[0,0],[0,2],[0,3],[1,1],[1,2],[1,3],[2,0],[2,1],[2,2],[3,0],[3,1],[3,3],[3,4],[4,3],[4,4]]
+            [[0,1],[0,2],[0,4],[1,1],[1,2],
+            [1,3],[2,2],[2,3],[2,4],[3,0],
+            [3,1],[3,3],[3,4],[4,0],[4,1]],
+
+            [[0,0],[0,1],[1,0],[1,1],[1,3],
+            [1,4],[2,2],[2,3],[2,4],[3,1],
+            [3,2],[3,3],[4,1],[4,2],[4,4]],
+
+            [[0,3],[0,4],[1,0],[1,1],[1,3],
+            [1,4],[2,0],[2,1],[2,2],[3,1],
+            [3,2],[3,3],[4,0],[4,2],[4,3]],
+
+            [[0,0],[0,2],[0,3],[1,1],[1,2],
+            [1,3],[2,0],[2,1],[2,2],[3,0],
+            [3,1],[3,3],[3,4],[4,3],[4,4]]
         ];
 
-        // Выбираем случайный эталонный набор
-        const randomTemplate = templates[Math.floor(Math.random() * templates.length)];
+        const template =
+            templates[Math.floor(Math.random() * templates.length)];
 
-        // Перемешиваем его (алгоритм Фишера-Йетса для честного перемешивания)
-        const shuffled = [...randomTemplate];
-        for (let i = shuffled.length - 1; i > 0; i--) 
+        return this.#shuffle([...template]).slice(0, n);
+    }
+
+    #generateRandom(n) 
+    {
+        const cells = [];
+
+        for (let r = 0; r < this.boardSize; r++) 
+        {
+            for (let c = 0; c < this.boardSize; c++)
+                cells.push([r, c]);
+        }
+
+        return this.#shuffle(cells).slice(0, n);
+    }
+
+    #shuffle(array) 
+    {
+        for (let i = array.length - 1; i > 0; i--) 
         {
             const j = Math.floor(Math.random() * (i + 1));
-            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+
+            [array[i], array[j]] = [array[j], array[i]];
         }
 
-        // Применяем первые N ходов к пустому полю
-        for (let i = 0; i < n; i++) 
-        {
-            const [r, c] = shuffled[i];
-            this.toggle(r, c);
-        }
+        return array;
     }
 
     // Метод перезапуска игры
@@ -148,5 +215,29 @@ export class Game {
         this.isGameOver = false; 
         this.generateLevel(this.level); // Генерируем новый уровень той же сложности
         this.notify(); // Оповещаем HUD и Renderer об изменениях
+    }
+
+    //Меняет поле
+    setPreset(preset) 
+    {
+        if (!preset ||
+            !Number.isInteger(preset.size) ||
+            !Number.isInteger(preset.maxLevel) ||
+            preset.size < 1 ||
+            preset.maxLevel < 1 ||
+            preset.maxLevel > preset.size ** 2)
+            throw new Error('Game: invalid preset');
+
+        if (!['template', 'random'].includes(preset.generator))
+            throw new Error('Game: unknown generator');
+
+        if (preset.generator === 'template' && preset.size !== 5)
+            throw new Error('Template generator supports only 5x5');
+
+        this.boardSize = preset.size;
+        this.maxLevel = preset.maxLevel;
+        this.generator = preset.generator;
+
+        this.restart();
     }
 }
