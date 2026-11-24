@@ -125,4 +125,14 @@ export class HUD {
             button.setAttribute('aria-pressed', String(isActive));
         });
     }
+
+    // Блокировка/разблокировка кнопки перезапуска уровня
+    setRestartLevelDisabled(isDisabled) 
+    {
+        if (this.restartLevelEl) 
+        {
+            this.restartLevelEl.disabled = isDisabled;
+            this.restartLevelEl.classList.toggle('disabled', isDisabled); 
+        }
+    }
 }

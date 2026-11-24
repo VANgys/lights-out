@@ -63,9 +63,15 @@ game.subscribe((g) => {
 
     // Сообщение о победе
     if (g.isGameOver)
+    {
         hud.showWinMessage();
+        hud.setRestartLevelDisabled(true); // Блокируем кнопку уровня
+    }
     else
+    {
         hud.hideWinMessage();
+        hud.setRestartLevelDisabled(false); // Разблокируем кнопку уровня
+    }
 });
 
 // 4. Обработка кнопок размера
