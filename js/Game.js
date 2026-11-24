@@ -105,29 +105,45 @@ export class Game {
         )
             throw new Error(`Invalid level: ${n}`);
 
-        this.moves = 0;
+        let attempts = 0;
+        const maxAttempts = 10;
+        let isGenerated = false;
+        while (attempts < maxAttempts && !isGenerated) 
+        {
+            this.moves = 0;
 
-        // Создаём пустое поле нужного размера
-        this.grid = Array.from(
-            { length: this.boardSize },
-            () => Array(this.boardSize).fill(0)
-        );
+            // Создаём пустое поле нужного размера
+            this.grid = Array.from(
+                { length: this.boardSize },
+                () => Array(this.boardSize).fill(0)
+            );
 
-        let selectedMoves;
+            let selectedMoves;
 
-        if (this.generator === 'template')
-            selectedMoves = this.#generateFromTemplate(n);
-        else if (this.generator === 'random')
-            selectedMoves = this.#generateRandom(n);
-        else
-            throw new Error('Unknown generator');
+            if (this.generator === 'template')
+                selectedMoves = this.#generateFromTemplate(n);
+            else if (this.generator === 'random')
+                selectedMoves = this.#generateRandom(n);
+            else
+                throw new Error('Unknown generator');
 
-        if (selectedMoves.length !== n)
-            throw new Error('Generator returned incorrect number of moves');
+            if (selectedMoves.length !== n)
+                throw new Error('Generator returned incorrect number of moves');
 
-        // Применяем выбранные ходы
-        for (const [r, c] of selectedMoves)
-            this.toggle(r, c);
+            // Применяем выбранные ходы
+            for (const [r, c] of selectedMoves)
+                this.toggle(r, c);
+
+            // Проверяем, не осталось ли поле полностью выключенным
+            if (!this.checkWin())
+                isGenerated = true; // Поле не пустое, успех!
+
+            attempts++;
+        }
+
+        // Если после 10 попыток не удалось — выбрасываем ошибку
+        if (!isGenerated)
+            throw new Error('Не удалось сгенерировать уровень после 10 попыток.');
     }
 
     #generateFromTemplate(n) 

@@ -89,14 +89,29 @@ hud.onBoardSizeChange((size) => {
 });
 
 // 5. Инициализация первого уровня (вызовет notify и отрисовывает поле)
-game.restart();
+try {
+    game.restart();
+} catch (error) {
+    console.error(error);
+    hud.showLevelGenerationError();
+}
 
 // 6. Обработка кнопки "Перезапустить игру"
 hud.onRestartClick(() => {
-    game.restart(); // Внутри restart() должен вызываться notify() для обновления UI
+    try {
+        game.restart();
+    } catch (error) {
+        console.error(error);
+        hud.showLevelGenerationError();
+    }
 });
 
 // 7. Обработка кнопки "Перезапустить уровень"
 hud.onRestartLevelClick(() => {
-    game.restartLevel();
+    try {
+        game.restartLevel();
+    } catch (error) {
+        console.error(error);
+        hud.showLevelGenerationError();
+    }
 });
