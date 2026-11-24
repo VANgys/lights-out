@@ -212,7 +212,9 @@ export class Game {
     // Метод перезапуска текущего уровня
     restartLevel() 
     {
-        this.isGameOver = false; 
+        // Если игра завершена (победа на 15 уровне), рестарт уровня запрещен
+        if (this.isGameOver) return;
+        
         this.generateLevel(this.level); // Генерируем новый уровень той же сложности
         this.notify(); // Оповещаем HUD и Renderer об изменениях
     }

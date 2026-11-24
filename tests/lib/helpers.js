@@ -1,9 +1,9 @@
 /**
  * helpers.js - Вспомогательные функции для тестов.
  */
-import { CONFIG } from '../../js/config.js';
+import { CONFIG, BOARD_PRESETS } from '../../js/config.js';
 
-const N = CONFIG.BOARD_SIZE;
+const N = BOARD_PRESETS[5].size;
 
 // Пустое поле 5x5
 export function emptyGrid() {

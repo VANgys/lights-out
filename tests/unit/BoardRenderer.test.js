@@ -5,7 +5,7 @@
  */
 import { describe, it, expect, beforeEach } from '../lib/test-runner.js';
 import { BoardRenderer } from '../../js/BoardRenderer.js';
-import { CONFIG } from '../../js/config.js';
+import { CONFIG, BOARD_PRESETS } from '../../js/config.js';
 import { emptyGrid } from '../lib/helpers.js';
 
 let renderer, drawn;
@@ -15,7 +15,7 @@ describe('BoardRenderer: логика отрисовки', () => {
         const canvas = document.createElement('canvas');
         canvas.width = 400;
         canvas.height = 400;
-        renderer = new BoardRenderer(canvas);
+        renderer = new BoardRenderer(canvas, BOARD_PRESETS[5].size);
 
         // Перехватываем drawCell, чтобы запомнить параметры каждой клетки
         drawn = [];
@@ -25,7 +25,7 @@ describe('BoardRenderer: логика отрисовки', () => {
 
     it('draw() рисует все 25 клеток', () => {
         renderer.draw(emptyGrid(), false);
-        expect(drawn.length).toBe(CONFIG.BOARD_SIZE * CONFIG.BOARD_SIZE);
+        expect(drawn.length).toBe(BOARD_PRESETS[5].size * BOARD_PRESETS[5].size);
     });
 
     it('Включённая клетка рисуется как включённая', () => {

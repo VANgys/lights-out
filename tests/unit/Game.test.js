@@ -3,7 +3,7 @@
  */
 import { describe, it, expect, beforeEach } from '../lib/test-runner.js';
 import { Game } from '../../js/Game.js';
-import { CONFIG } from '../../js/config.js';
+import { CONFIG, BOARD_PRESETS } from '../../js/config.js';
 import { emptyGrid, cloneGrid, diffCells, countOn, minMoves, spy } from '../lib/helpers.js';
 
 // Сортировка координат, чтобы сравнивать наборы клеток без учёта порядка
@@ -14,7 +14,7 @@ let game;
 // ---------------------------------------------------------------
 describe('4.1 Инверсия клеток (Game.toggle)', () => {
     beforeEach(() => {
-        game = new Game();
+        game = new Game(BOARD_PRESETS[5]);
         game.grid = emptyGrid();
     });
 
@@ -65,15 +65,15 @@ describe('4.1 Инверсия клеток (Game.toggle)', () => {
     it('Инверсия не выходит за границы поля (размер остаётся 5x5)', () => {
         game.toggle(0, 0);
         game.toggle(4, 4);
-        expect(game.grid.length).toBe(CONFIG.BOARD_SIZE);
-        for (const row of game.grid) expect(row.length).toBe(CONFIG.BOARD_SIZE);
+        expect(game.grid.length).toBe(game.boardSize);
+        for (const row of game.grid) expect(row.length).toBe(game.boardSize);
     });
 });
 
 // ---------------------------------------------------------------
 describe('4.2 Подсчёт ходов', () => {
     beforeEach(() => {
-        game = new Game();
+        game = new Game(BOARD_PRESETS[5]);
         game.restart();
     });
 
@@ -116,7 +116,7 @@ describe('4.2 Подсчёт ходов', () => {
 // ---------------------------------------------------------------
 describe('4.3 Определение победы', () => {
     beforeEach(() => {
-        game = new Game();
+        game = new Game(BOARD_PRESETS[5]);
         game.restart();
     });
 
@@ -151,16 +151,16 @@ describe('4.3 Определение победы', () => {
     });
 
     it('Победа на 15-м уровне завершает игру (isGameOver = true)', () => {
-        game.level = CONFIG.MAX_LEVEL;
+        game.level = game.maxLevel;
         game.grid = emptyGrid();
         game.toggle(1, 3);
         game.handleClick(1, 3);
         expect(game.isGameOver).toBe(true);
-        expect(game.level).toBe(CONFIG.MAX_LEVEL);
+        expect(game.level).toBe(game.maxLevel);
     });
 
     it('После завершения игры клики не меняют поле', () => {
-        game.level = CONFIG.MAX_LEVEL;
+        game.level = game.maxLevel;
         game.grid = emptyGrid();
         game.toggle(1, 3);
         game.handleClick(1, 3);
@@ -171,7 +171,7 @@ describe('4.3 Определение победы', () => {
 
     it('restart() после завершения игры возвращает на уровень 1', () => {
         game.isGameOver = true;
-        game.level = CONFIG.MAX_LEVEL;
+        game.level = game.maxLevel;
         game.restart();
         expect(game.isGameOver).toBe(false);
         expect(game.level).toBe(1);
@@ -182,7 +182,7 @@ describe('4.3 Определение победы', () => {
 // ---------------------------------------------------------------
 describe('4.4 Генерация уровней (Game.generateLevel)', () => {
     beforeEach(() => {
-        game = new Game();
+        game = new Game(BOARD_PRESETS[5]);
     });
 
     // Генерация случайна, поэтому каждый уровень проверяется многократно
@@ -190,9 +190,9 @@ describe('4.4 Генерация уровней (Game.generateLevel)', () => {
 
     it('Поле имеет размер 5x5 и содержит только 0 и 1', () => {
         game.generateLevel(7);
-        expect(game.grid.length).toBe(CONFIG.BOARD_SIZE);
+        expect(game.grid.length).toBe(game.boardSize);
         for (const row of game.grid) {
-            expect(row.length).toBe(CONFIG.BOARD_SIZE);
+            expect(row.length).toBe(game.boardSize);
             for (const v of row) expect(v === 0 || v === 1).toBe(true);
         }
     });
@@ -218,7 +218,7 @@ describe('4.4 Генерация уровней (Game.generateLevel)', () => {
     });
 
     it(`Каждый уровень 1–15: минимальное число ходов = номер уровня (${RUNS} генераций на уровень)`, () => {
-        for (let n = 1; n <= CONFIG.MAX_LEVEL; n++) {
+        for (let n = 1; n <= game.maxLevel; n++) {
             for (let i = 0; i < RUNS; i++) {
                 game.generateLevel(n);
                 const m = minMoves(game.grid);
@@ -229,14 +229,14 @@ describe('4.4 Генерация уровней (Game.generateLevel)', () => {
     });
 
     it('Поле любого уровня решаемо', () => {
-        for (let n = 1; n <= CONFIG.MAX_LEVEL; n++) {
+        for (let n = 1; n <= game.maxLevel; n++) {
             game.generateLevel(n);
             expect(minMoves(game.grid) !== null).toBe(true);
         }
     });
 
     it('Поле любого уровня не пустое', () => {
-        for (let n = 1; n <= CONFIG.MAX_LEVEL; n++) {
+        for (let n = 1; n <= game.maxLevel; n++) {
             for (let i = 0; i < 10; i++) {
                 game.generateLevel(n);
                 expect(countOn(game.grid)).toBeGreaterThan(0);
@@ -248,7 +248,7 @@ describe('4.4 Генерация уровней (Game.generateLevel)', () => {
 // ---------------------------------------------------------------
 describe('4.6 Начальное состояние (аналог перезагрузки страницы)', () => {
     it('Новый экземпляр Game после restart(): уровень 1, счётчик 0, игра не завершена', () => {
-        const g = new Game();
+        const g = new Game(BOARD_PRESETS[5]);
         g.restart();
         expect(g.level).toBe(1);
         expect(g.moves).toBe(0);
@@ -257,11 +257,11 @@ describe('4.6 Начальное состояние (аналог перезаг
     });
 
     it('Состояние предыдущей игры не переносится в новый экземпляр', () => {
-        const old = new Game();
+        const old = new Game(BOARD_PRESETS[5]);
         old.restart();
         old.level = 9;
         old.moves = 4;
-        const fresh = new Game();
+        const fresh = new Game(BOARD_PRESETS[5]);
         fresh.restart();
         expect(fresh.level).toBe(1);
         expect(fresh.moves).toBe(0);
@@ -271,7 +271,7 @@ describe('4.6 Начальное состояние (аналог перезаг
 // ---------------------------------------------------------------
 describe('Перезапуск текущего уровня (Game.restartLevel)', () => {
     beforeEach(() => {
-        game = new Game();
+        game = new Game(BOARD_PRESETS[5]);
         game.restart();
     });
 
@@ -294,7 +294,7 @@ describe('Перезапуск текущего уровня (Game.restartLevel)
     });
 
     it('Не позволяет перезапустить уровень после победы на 15-м уровне', () => {
-        game.level = CONFIG.MAX_LEVEL;
+        game.level = game.maxLevel;
         game.grid = emptyGrid();
         game.toggle(2, 2);
 
@@ -314,7 +314,7 @@ describe('Перезапуск текущего уровня (Game.restartLevel)
         game.restartLevel();
 
         expect(game.isGameOver).toBe(true);
-        expect(game.level).toBe(CONFIG.MAX_LEVEL);
+        expect(game.level).toBe(game.maxLevel);
         expect(game.moves).toBe(finishedMoves);
         expect(game.grid).toEqual(finishedGrid);
         expect(listener.calls.length).toBe(notificationCount);
@@ -324,7 +324,7 @@ describe('Перезапуск текущего уровня (Game.restartLevel)
 // ---------------------------------------------------------------
 describe('Подписка на изменения (Game.subscribe / notify)', () => {
     beforeEach(() => {
-        game = new Game();
+        game = new Game(BOARD_PRESETS[5]);
     });
 
     it('subscribe() бросает ошибку, если передана не функция', () => {
