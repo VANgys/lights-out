@@ -15,7 +15,7 @@ describe('HUD: счётчик ходов и сообщение о победе',
         buttonEl = document.createElement('button');
         winEl = document.createElement('span');
         winEl.hidden = true;
-        hud = new HUD(counterEl, buttonEl, winEl);
+        hud = new HUD(counterEl, buttonEl, null, winEl);
     });
 
     it('updateCounter(5) показывает «5»', () => {
@@ -63,7 +63,7 @@ describe('HUD: счётчик ходов и сообщение о победе',
 describe('HUD: кнопка «Перезапустить игру»', () => {
     beforeEach(() => {
         buttonEl = document.createElement('button');
-        hud = new HUD(document.createElement('span'), buttonEl, document.createElement('span'));
+        hud = new HUD(document.createElement('span'), buttonEl, document.createElement('span'), null);
     });
 
     it('Клик по кнопке вызывает переданный callback', () => {
@@ -94,7 +94,7 @@ describe('HUD: кнопка «Перезапустить игру»', () => {
 
 describe('HUD: отсутствующие DOM-элементы', () => {
     it('Методы не падают, если элементы не найдены (null)', () => {
-        const empty = new HUD(null, null, null);
+        const empty = new HUD(null, null, null, null);
         expect(() => empty.updateCounter(3)).not.toThrow();
         expect(() => empty.showWinMessage()).not.toThrow();
         expect(() => empty.hideWinMessage()).not.toThrow();
