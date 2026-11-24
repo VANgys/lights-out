@@ -269,6 +269,59 @@ describe('4.6 Начальное состояние (аналог перезаг
 });
 
 // ---------------------------------------------------------------
+describe('Перезапуск текущего уровня (Game.restartLevel)', () => {
+    beforeEach(() => {
+        game = new Game();
+        game.restart();
+    });
+
+    it('Перезапускает текущий уровень и сбрасывает счётчик ходов', () => {
+        game.level = 5;
+        game.moves = 3;
+        game.grid = emptyGrid();
+
+        const listener = spy();
+        game.subscribe(listener);
+
+        game.restartLevel();
+
+        expect(game.level).toBe(5);
+        expect(game.moves).toBe(0);
+        expect(game.isGameOver).toBe(false);
+        expect(countOn(game.grid)).toBeGreaterThan(0);
+        expect(minMoves(game.grid)).toBe(5);
+        expect(listener.calls.length).toBe(1);
+    });
+
+    it('Не позволяет перезапустить уровень после победы на 15-м уровне', () => {
+        game.level = CONFIG.MAX_LEVEL;
+        game.grid = emptyGrid();
+        game.toggle(2, 2);
+
+        const listener = spy();
+        game.subscribe(listener);
+
+        // Завершаем игру одним ходом
+        game.handleClick(2, 2);
+
+        expect(game.isGameOver).toBe(true);
+
+        const finishedGrid = cloneGrid(game.grid);
+        const finishedMoves = game.moves;
+        const notificationCount = listener.calls.length;
+
+        // Пытаемся перезапустить пройденный уровень
+        game.restartLevel();
+
+        expect(game.isGameOver).toBe(true);
+        expect(game.level).toBe(CONFIG.MAX_LEVEL);
+        expect(game.moves).toBe(finishedMoves);
+        expect(game.grid).toEqual(finishedGrid);
+        expect(listener.calls.length).toBe(notificationCount);
+    });
+});
+
+// ---------------------------------------------------------------
 describe('Подписка на изменения (Game.subscribe / notify)', () => {
     beforeEach(() => {
         game = new Game();

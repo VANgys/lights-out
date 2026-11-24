@@ -60,7 +60,7 @@ describe('HUD: счётчик ходов и сообщение о победе',
     });
 });
 
-describe('HUD: кнопка «Перезапустить игру»', () => {
+describe('HUD: кнопка "Перезапустить игру"', () => {
     beforeEach(() => {
         buttonEl = document.createElement('button');
         hud = new HUD(document.createElement('span'), buttonEl, document.createElement('span'), null);
@@ -99,5 +99,63 @@ describe('HUD: отсутствующие DOM-элементы', () => {
         expect(() => empty.showWinMessage()).not.toThrow();
         expect(() => empty.hideWinMessage()).not.toThrow();
         expect(() => empty.onRestartClick(() => {})).not.toThrow();
+    });
+});
+
+describe('HUD: кнопка "Перезапустить уровень"', () => {
+    let restartLevelEl;
+
+    beforeEach(() => {
+        restartLevelEl = document.createElement('button');
+        hud = new HUD(
+            document.createElement('span'),
+            document.createElement('button'),
+            restartLevelEl,
+            null
+        );
+    });
+
+    it('Клик по кнопке вызывает переданный callback', () => {
+        const callback = spy();
+
+        hud.onRestartLevelClick(callback);
+        restartLevelEl.click();
+
+        expect(callback.calls.length).toBe(1);
+    });
+
+    it('Повторная подписка заменяет старый обработчик', () => {
+        const first = spy();
+        const second = spy();
+
+        hud.onRestartLevelClick(first);
+        hud.onRestartLevelClick(second);
+
+        restartLevelEl.click();
+
+        expect(first.calls.length).toBe(0);
+        expect(second.calls.length).toBe(1);
+    });
+
+    it('Заблокированная кнопка не вызывает callback', () => {
+        const callback = spy();
+
+        hud.onRestartLevelClick(callback);
+
+        hud.setRestartLevelDisabled(true);
+
+        expect(restartLevelEl.disabled).toBe(true);
+
+        restartLevelEl.click();
+
+        expect(callback.calls.length).toBe(0);
+
+        hud.setRestartLevelDisabled(false);
+
+        expect(restartLevelEl.disabled).toBe(false);
+
+        restartLevelEl.click();
+
+        expect(callback.calls.length).toBe(1);
     });
 });
