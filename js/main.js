@@ -14,6 +14,8 @@ const winMessageEl = document.getElementById('win-message'); // ID из твое
 const sizeButtons = document.querySelectorAll('.size-btn');
 const currentLevelEl = document.getElementById('current-level');
 const maxLevelEl = document.getElementById('max-level');
+const scoreEl = document.getElementById('score-value');
+const highscoreEl = document.getElementById('highscore-value');
 
 // 2. Создаем экземпляры классов
 const initialPreset = BOARD_PRESETS[5];
@@ -29,7 +31,9 @@ const hud = new HUD(
     winMessageEl,
     sizeButtons,
     currentLevelEl,
-    maxLevelEl
+    maxLevelEl,
+    scoreEl,
+    highscoreEl
 );
 const input = new BoardInput(
     canvas,
@@ -57,6 +61,10 @@ game.subscribe((g) => {
 
     // Обновляем номер текущего и максимального уровня
     hud.updateLevelInfo(g.level, g.maxLevel);
+
+    // Обновление очков и рекорда при любом изменении состояния игры
+    hud.updateScore(g.totalScore);
+    hud.updateHighScore(g.getHighScore());
 
     // Подсвечиваем выбранный размер
     hud.setActiveBoardSize(g.boardSize);
