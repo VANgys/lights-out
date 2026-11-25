@@ -13,6 +13,18 @@ export class Game {
     this.level = 1;
     this.isGameOver = false;
 
+    // Инициализация очков и накопителя ходов для текущего уровня
+    this.totalScore = 0;
+    this.levelMovesAccumulator = 0;
+
+    // Хранилище рекордов
+    // Ключи: 3, 5, 7 — значения: число
+    this.highScores = {
+        3: 0,
+        5: 0,
+        7: 0
+    };
+
     this.listeners = [];
     }
 
@@ -37,19 +49,28 @@ export class Game {
         // Инверсия клеток
         this.toggle(r, c);
         
-        // Увеличение счётчика ходов
+        // Увеличение счётчика ходов (видимого и внутреннего накопителя)
         this.moves++;
+        this.levelMovesAccumulator++;
 
         // Проверка победы
         if (this.checkWin()) 
         {
+            // Формула: P = floor(100 × min(1, N / M))
+            const points = Math.floor(100 * Math.min(1, this.level / this.levelMovesAccumulator));
+            this.totalScore += points;
+
+            // Обновление рекорда
+            this.#updateHighScore();
+
             if (this.level < this.maxLevel) 
             {
                 this.level++;
+                this.levelMovesAccumulator = 0; // Сброс накопителя для нового уровня
                 this.generateLevel(this.level); // Вызываем генерацию
             } 
             else
-                this.isGameOver = true; // Победа на 15 уровне
+                this.isGameOver = true; // Победа на последнем уровне
         }
 
         // в самом конце сообщаем, что состояние изменилось
@@ -205,6 +226,8 @@ export class Game {
     {
         this.level = 1;
         this.isGameOver = false;
+        this.totalScore = 0;                 // Сброс общего счёта
+        this.levelMovesAccumulator = 0;      // Сброс накопителя ходов
         this.generateLevel(this.level);
         this.notify();
     }
@@ -240,6 +263,23 @@ export class Game {
         this.maxLevel = preset.maxLevel;
         this.generator = preset.generator;
 
+        // Сброс состояния партии при смене размера поля
+        this.totalScore = 0;
+        this.levelMovesAccumulator = 0;
+
         this.restart();
+    }
+
+    #updateHighScore() 
+    {
+        const currentHighScore = this.highScores[this.boardSize] || 0;
+        if (this.totalScore > currentHighScore)
+            this.highScores[this.boardSize] = this.totalScore;
+    }
+
+    // Публичный метод для получения актуального рекорда (нужен для HUD)
+    getHighScore() 
+    {
+        return this.highScores[this.boardSize] || 0;
     }
 }
