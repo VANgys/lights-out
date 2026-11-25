@@ -163,8 +163,18 @@ describe('Переключение размера поля во время иг�
     it('Переключение с 3x3 на 7x7 сбрасывает ходы, уровень и генерирует новое поле', () => {
         const game = new Game(BOARD_PRESETS[3]);
         game.restart();
+
+        // --- ИСПРАВЛЕНИЕ: Исключаем случайную победу ---
+        // Принудительно задаем поле, которое точно не решится двумя кликами по (0,0) и (1,1)
+        game.grid = [
+            [1, 0, 0],
+            [0, 1, 0],
+            [0, 0, 1]
+        ];
+
         game.handleClick(0, 0);
         game.handleClick(1, 1);
+
         expect(game.moves).toBe(2);
         expect(game.boardSize).toBe(3);
 
@@ -174,7 +184,9 @@ describe('Переключение размера поля во время иг�
         expect(game.moves).toBe(0);
         expect(game.level).toBe(1);
         expect(game.grid.length).toBe(7);
-        expect(countOn(game.grid)).toBeGreaterThan(0);
+        
+        // Проверка, что новое поле не пустое (используем flat().some для надежности)
+        expect(game.grid.flat().some(v => v === 1)).toBe(true);
     });
 });
 
@@ -257,8 +269,15 @@ describe('Регрессионная проверка размера 5×5', () =
         expect(game.moves).toBe(0);
         expect(countOn(game.grid)).toBeGreaterThan(0);
 
+        // --- ИСПРАВЛЕНИЕ: Исключаем случайную мгновенную победу ---
+        // Включаем клетку в углу (0, 0). Клик по центру (2, 2) её не затронет,
+        // поэтому поле гарантированно НЕ решится этим одним кликом.
+        game.grid[0][0] = 1;
+        // -----------------------------------------------------------
+
         const before = game.grid.map(row => [...row]);
         game.handleClick(2, 2);
+        
         expect(game.moves).toBe(1);
         expect(diffCellsDynamic(before, game.grid).length).toBe(5);
 
