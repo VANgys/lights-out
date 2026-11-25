@@ -13,7 +13,9 @@ export class HUD {
     winMessageEl,
     sizeButtons,
     currentLevelEl,
-    maxLevelEl
+    maxLevelEl,
+    scoreEl,
+    highscoreEl
     ) {
     this.counterEl = counterEl;
     this.buttonEl = buttonEl;
@@ -23,6 +25,9 @@ export class HUD {
     this.sizeButtons = Array.from(sizeButtons ?? []);
     this.currentLevelEl = currentLevelEl;
     this.maxLevelEl = maxLevelEl;
+
+    this.scoreEl = scoreEl;
+    this.highscoreEl = highscoreEl;
     }
 
     /**
@@ -34,6 +39,16 @@ export class HUD {
         if (this.counterEl) {
             this.counterEl.textContent = moves;
         }
+    }
+
+    updateScore(score) {
+        if (this.scoreEl)
+            this.scoreEl.textContent = score;
+    }
+
+    updateHighScore(highscore) {
+        if (this.highscoreEl)
+            this.highscoreEl.textContent = highscore;
     }
 
     /**
