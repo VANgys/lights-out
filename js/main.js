@@ -66,6 +66,16 @@ game.subscribe((g) => {
     hud.updateScore(g.totalScore);
     hud.updateHighScore(g.getHighScore());
 
+    // Меняем цвет рекорда, если он побит
+    hud.setHighScoreColor(g.isHighScoreBeaten);
+
+    // Вызов анимации очков
+    if (g.lastEarnedPoints > 0) {
+        hud.showScorePopup(g.lastEarnedPoints);
+        //Сбрасываем, чтобы анимация не повторялась при каждом клике на новом уровне
+        g.lastEarnedPoints = 0; 
+    }
+
     // Подсвечиваем выбранный размер
     hud.setActiveBoardSize(g.boardSize);
 

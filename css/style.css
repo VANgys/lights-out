@@ -95,7 +95,7 @@ body {
 }
 
 .size-btn:hover { 
-  background: rgba(255,255,255,0.12);
+  background: rgba(255,255,255,.05);
   border-color: var(--purple); 
 }
 
@@ -287,4 +287,45 @@ body {
   .titles .subtitle { 
     font-size: 12px; /* Чуть уменьшаем подзаголовок */
   }
+}
+
+/*
+   Анимация всплывающих очков 
+*/
+.metrics {
+  position: relative; /* Чтобы анимация позиционировалась от панели */
+}
+
+/* Стили всплывающей цифры очков */
+.score-popup {
+  position: absolute;
+  top: -10px;
+  left: 50%; /* Ставим ровно по центру метрик */
+  color: #ffb30b;
+  font-weight: 800;
+  font-size: 20px;
+  opacity: 0;
+  pointer-events: none;
+  text-shadow: 0 2px 5px rgba(0,0,0,0.5);
+  z-index: 10;
+  white-space: nowrap;
+  /* Исходный сдвиг для идеального центрирования */
+  transform: translateX(-50%); 
+}
+
+@keyframes floatUp {
+  0%   { opacity: 0; transform: translate(-50%, 10px) scale(0.8); }
+  20%  { opacity: 1; transform: translate(-50%, -10px) scale(1.1); }
+  80%  { opacity: 1; transform: translate(-50%, -30px) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -40px) scale(1); }
+}
+
+.score-popup.animate {
+  animation: floatUp 1.5s ease-out forwards;
+}
+
+/* Стиль для рекорда, когда он побит */
+.metric .value.highscore-beaten {
+  color: var(--win); /* Салатовый цвет (как у сообщения о победе) */
+  transition: color 0.3s ease; /* Плавная смена цвета */
 }
