@@ -94,11 +94,11 @@ body {
   transition: all 0.2s ease;
 }
 
+/* Эффект "утопания" при нажатии */
 .size-btn:active {
   transform: scale(0.92);
 }
 
-/* Эффект "утопания" при нажатии */
 .size-btn:hover { 
   background: rgba(255,255,255,.05);
   border-color: var(--purple); 
