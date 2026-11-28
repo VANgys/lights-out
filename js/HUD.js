@@ -46,9 +46,39 @@ export class HUD {
             this.scoreEl.textContent = score;
     }
 
+    showScorePopup(points) {
+        if (!points || points <= 0) return;
+        
+        // Находим родительский блок (колонку) для очков
+        const scoreMetricEl = this.scoreEl ? this.scoreEl.closest('.metric') : null;
+
+        if (!scoreMetricEl) return;
+
+        // Создаем элемент
+        const popup = document.createElement('div');
+        popup.className = 'score-popup';
+        popup.textContent = `+${points}`;
+        
+        // Добавляем внутрь колонки с очками
+        scoreMetricEl.appendChild(popup);
+
+        // Запускаем анимацию
+        setTimeout(() => popup.classList.add('animate'), 10);
+        // Удаляем через 1.5 секунды
+        setTimeout(() => popup.remove(), 1500);
+    }
+
     updateHighScore(highscore) {
         if (this.highscoreEl)
             this.highscoreEl.textContent = highscore;
+    }
+
+    // Обновление цвета у рекорда, если он побит
+    setHighScoreColor(isBeaten) {
+        if (this.highscoreEl) {
+            // Добавляем или убираем класс, который меняет цвет
+            this.highscoreEl.classList.toggle('highscore-beaten', isBeaten);
+        }
     }
 
     /**

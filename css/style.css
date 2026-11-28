@@ -82,20 +82,26 @@ body {
 
 /* Кнопки выбора размера поля */
 .size-btn {
-  min-width: 44px;
-  height: 28px;
+  min-width: 54px;
+  height: 34px;
   border: 1px solid rgba(105,86,233,0.4);
   border-radius: 999px; /* Форма таблетки */
   background: transparent;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
+.size-btn:active {
+  transform: scale(0.92);
+}
+
+/* Эффект "утопания" при нажатии */
 .size-btn:hover { 
-  background: rgba(255,255,255,.05); 
+  background: rgba(255,255,255,.05);
+  border-color: var(--purple); 
 }
 
 /* Активный размер (на котором сейчас играет пользователь) */
@@ -103,6 +109,7 @@ body {
   background: var(--purple);
   border-color: var(--purple);
   color: #fff;
+  box-shadow: 0 4px 10px rgba(55, 42, 165, .3);
 }
 
 /* 
@@ -200,7 +207,7 @@ body {
   font-weight: 750; 
 }
 
-/* Кнопка "Перезапустить игру" */
+/* Кнопка "Перезапустить уровень" */
 .restart {
   display: block;
   width: 100%;           /* Кнопка на всю ширину карточки */
@@ -237,8 +244,8 @@ body {
   outline-offset: 3px; 
 }
 
-/* Кнопка перезапуска текущего уровня (второстепенная кнопка) */
-.restart-level-btn {
+/* Кнопка перезапуска игры (второстепенная кнопка) */
+.restart-game-btn {
   margin-top: 12px;
   background: rgba(255, 255, 255, 0.06); /* Полупрозрачный светлый фон */
   border: 1px solid rgba(105, 86, 233, 0.4); /* Тонкая рамка */
@@ -247,9 +254,10 @@ body {
 }
 
 /* Эффект при наведении на второстепенную кнопку */
-.restart-level-btn:hover {
+.restart-game-btn:hover {
   background: rgba(255, 255, 255, 0.12); /* Становится чуть светлее */
   box-shadow: none; /* Убираем тень при наведении */
+  border-color: var(--purple);
 }
 
 /* 
@@ -284,4 +292,45 @@ body {
   .titles .subtitle { 
     font-size: 12px; /* Чуть уменьшаем подзаголовок */
   }
+}
+
+/*
+   Анимация всплывающих очков 
+*/
+.metrics {
+  position: relative; /* Чтобы анимация позиционировалась от панели */
+}
+
+/* Стили всплывающей цифры очков */
+.score-popup {
+  position: absolute;
+  top: -10px;
+  left: 50%; /* Ставим ровно по центру метрик */
+  color: #ffb30b;
+  font-weight: 800;
+  font-size: 20px;
+  opacity: 0;
+  pointer-events: none;
+  text-shadow: 0 2px 5px rgba(0,0,0,0.5);
+  z-index: 10;
+  white-space: nowrap;
+  /* Исходный сдвиг для идеального центрирования */
+  transform: translateX(-50%); 
+}
+
+@keyframes floatUp {
+  0%   { opacity: 0; transform: translate(-50%, 10px) scale(0.8); }
+  20%  { opacity: 1; transform: translate(-50%, -10px) scale(1.1); }
+  80%  { opacity: 1; transform: translate(-50%, -30px) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -40px) scale(1); }
+}
+
+.score-popup.animate {
+  animation: floatUp 1.5s ease-out forwards;
+}
+
+/* Стиль для рекорда, когда он побит */
+.metric .value.highscore-beaten {
+  color: var(--win); /* Салатовый цвет (как у сообщения о победе) */
+  transition: color 0.3s ease; /* Плавная смена цвета */
 }

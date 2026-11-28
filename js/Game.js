@@ -12,6 +12,9 @@ export class Game {
     this.moves = 0;
     this.level = 1;
     this.isGameOver = false;
+    this.lastEarnedPoints = 0;
+    // Флаг того, что рекорд побит в текущей сессии
+    this.isHighScoreBeaten = false;
 
     // Инициализация очков и накопителя ходов для текущего уровня
     this.totalScore = 0;
@@ -59,6 +62,8 @@ export class Game {
             // Формула: P = floor(100 × min(1, N / M))
             const points = Math.floor(100 * Math.min(1, this.level / this.levelMovesAccumulator));
             this.totalScore += points;
+
+            this.lastEarnedPoints = points; // Сохраняем для анимации
 
             // Обновление рекорда
             this.#updateHighScore();
@@ -228,6 +233,9 @@ export class Game {
         this.isGameOver = false;
         this.totalScore = 0;                 // Сброс общего счёта
         this.levelMovesAccumulator = 0;      // Сброс накопителя ходов
+        
+        this.isHighScoreBeaten = false;
+        
         this.generateLevel(this.level);
         this.notify();
     }
@@ -273,8 +281,10 @@ export class Game {
     #updateHighScore() 
     {
         const currentHighScore = this.highScores[this.boardSize] || 0;
-        if (this.totalScore > currentHighScore)
+        if (this.totalScore > currentHighScore) {
             this.highScores[this.boardSize] = this.totalScore;
+            this.isHighScoreBeaten = true;
+        }
     }
 
     // Публичный метод для получения актуального рекорда (нужен для HUD)
